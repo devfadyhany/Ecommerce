@@ -1,3 +1,5 @@
+
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import Login from "../pages/Login";
@@ -12,9 +14,9 @@ function AppRouter() {
 
         <Route
           element={
-            // <ProtectedRoute>
-            <DashboardLayout />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
           }
         >
           <Route path="/" element={<Navigate to="/dashboard" />} />
