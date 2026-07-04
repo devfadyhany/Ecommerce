@@ -1,7 +1,7 @@
-
 import { useEffect, useState } from "react";
-import api from "../api/axios";
-import InfoCard from "./ui/InfoCard";
+
+import api from "../../api/axios";
+import InfoCard from "./InfoCard";
 
 import {
   FaShoppingBag,

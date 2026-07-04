@@ -1,7 +1,6 @@
-
 import React from "react";
 import OrderStatus from "../components/ui/OrderStatus";
-import InfoSection from "../components/InfoSection";
+import InfoSection from "../components/ui/InfoSection";
 
 function Dashboard() {
   return (
