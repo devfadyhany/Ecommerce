@@ -1,9 +1,10 @@
 import React from "react";
+import OrderStatus from "../components/ui/OrderStatus";
 
 function Dashboard() {
   return (
     <>
-      <div>Dashboard</div>
+      <OrderStatus />
     </>
   );
 }

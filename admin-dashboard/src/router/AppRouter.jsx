@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
-import ProtectedRoute from "../components/ProtectedRoute"; 
+import ProtectedRoute from "../components/layout/ProtectedRoute";
 
 function AppRouter() {
   return (
@@ -10,11 +10,11 @@ function AppRouter() {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        <Route 
+        <Route
           element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
+            // <ProtectedRoute>
+            <DashboardLayout />
+            // </ProtectedRoute>
           }
         >
           <Route path="/" element={<Navigate to="/dashboard" />} />
