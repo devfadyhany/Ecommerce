@@ -1,1 +1,36 @@
 @import "tailwindcss";
+
+.card {
+  background-color: #ffffff;
+  padding: 24px 30px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  text-align: left;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 250px;
+}
+
+.title {
+  color: #0ea5e9;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0 0 6px 0;
+}
+
+.title-2 {
+  color: #0f172a;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.desc {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
