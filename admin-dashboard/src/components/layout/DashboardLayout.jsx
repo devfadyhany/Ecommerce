@@ -2,6 +2,7 @@ import React from "react";
 
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import OrderState from"./OrderStatus";
 import { Outlet } from "react-router";
 
 function DashboardLayout() {
@@ -12,6 +13,7 @@ function DashboardLayout() {
       <main>
         <Navbar />
         <Outlet />
+        <OrderState/>
       </main>
     </>
   );
