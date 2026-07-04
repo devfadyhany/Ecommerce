@@ -1,11 +1,9 @@
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
 
-    //  Temporarily reading the token and role from localStorage until the AuthContext is ready.  
-    
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('user_role'); 
+    const { token, userRole } = useAuth();
 
     if (!token || userRole !== 'admin') {
         return <Navigate to="/login" replace />;
