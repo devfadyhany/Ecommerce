@@ -5,18 +5,18 @@ import './login.css';
 import { useForm } from 'react-hook-form'; 
 
 const emailRules = {
-  required: "البريد الإلكتروني مطلوب",
+  required: "Email is required",
   pattern: {
     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    message: "صيغة البريد الإلكتروني غير صحيحة",
+    message: "Invalid email format",
   },
 };
 
 const passwordRules = {
-  required: "كلمة المرور مطلوبة",
+  required:"password required",
   minLength: {
     value: 8,
-    message: "يجب أن تتكون من 8 خانات على الأقل",
+    message: "password must be at least 8 characters long",
   },
 };
 
