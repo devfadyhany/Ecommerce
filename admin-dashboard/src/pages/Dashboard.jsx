@@ -1,7 +1,7 @@
 import HeaderCard from "../components/ui/HeaderCard";
 import InfoSection from "../components/ui/InfoSection";
 import OrderStatus from "../components/ui/OrderStatus";
-// import RecentOrders from "../components/ui/RecentOrders";
+import RecentOrders from "../components/ui/RecentOrders";
 // import TopProducts from "../components/ui/TopProducts";
 
 function Dashboard() {
@@ -11,9 +11,8 @@ function Dashboard() {
         <HeaderCard />
         <InfoSection />
         <OrderStatus />
-        {/* Replace with actual components once available */}
+        <RecentOrders />
         {/* <TopProducts /> */}
-        {/* <RecentOrders /> */}
       </div>
     </div>
   );
