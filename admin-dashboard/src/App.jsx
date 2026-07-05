@@ -1,19 +1,13 @@
-import React from 'react';
-import Login from './login/Login.jsx';
-import { BrowserRouter, Route ,Routes } from 'react-router';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AppRouter from "./router/AppRouter"; 
+import AppRouter from "./router/AppRouter";
 
 function App() {
-
-
   return (
-
-    <> 
-
-    
+    <>
       <AppRouter />
 
       <ToastContainer
@@ -26,7 +20,6 @@ function App() {
         draggable
         theme="light"
       />
-
     </>
   );
 }
