@@ -36,6 +36,7 @@
 }
 body {
     font-family: Arial, sans-serif;
+    background-color: #fffbe2;
 }
 .login-container {
     background:linear-gradient(to right, rgb(255, 244, 191),rgb(234, 224, 170), rgb(236, 227, 179));
