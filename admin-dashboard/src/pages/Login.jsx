@@ -35,7 +35,7 @@ function Login() {
 
   const isempty = emailValue.trim() === "";
   const isempty2 = passwordValue.trim() === "";
-  const bg = "bg-gray-300";
+
 
   const handleLogin = async (data) => {
     setLoading(true);
@@ -60,32 +60,32 @@ function Login() {
   return (
     <>
       <div className="gap-4 m-4 p-4 bg-gray-900 rounded-lg flex justify-between login-container">
-        <div className="flex-1 min-h-screen dleft rounded-lg ">
-          <h2 className="text-[25px] m-5 text-gray-100">Koda Commerce</h2>
-          <h1 className="text-[35px] mt-12 text-gray-100">
+        <div className="flex-1 h-128 dleft rounded-lg shrink-1 hidden md:block">
+          <h2 className="text-[25px] m-5 text-gray-900">Koda Commerce</h2>
+          <h1 className="text-[35px] mt-12 text-gray-900">
             Manage Your Store Like a Pro
           </h1>
-          <ul className="space-y-4 mt-20 text-gray-800 text-[18px]">
-            <li className="w-full bg-white rounded-xl p-4">
+          <ul className="space-y-4 mt-20 text-gray-800 text-[16px]">
+            <li className="w-full bg-[#e4cc8d] rounded-xl p-4">
               ✓ Product Management
             </li>
-            <li className="w-full bg-white rounded-xl p-4">✓ Order Tracking</li>
-            <li className="w-full bg-white rounded-xl p-4">
+            <li className="w-full bg-[#e4cc8d] rounded-xl p-4">✓ Order Tracking</li>
+            <li className="w-full bg-[#e4cc8d] rounded-xl p-4">
               ✓ Customer Insights
             </li>
           </ul>
         </div>
 
-        <div className="flex-1 min-h-screen bg-gray-500 rounded-lg shadow-md p-10 px-20 form-container">
-          <h2 className="text-4xl font-bold text-gray-800 text-center mt-16">
+        <div className="flex-1 h-128 bg-gray-500 rounded-lg shadow-md p-7 px-20 form-container shrink-0">
+          <h2 className="text-4xl font-bold text-gray-800 text-center mt-10">
             Login
           </h2>
 
           <form
             onSubmit={handleSubmit(handleLogin)}
             className={
-              bg +
-              " space-y-6 flex flex-col w-full mt-8 p-10 rounded-lg shadow-4xl form-login"
+              
+              "relative space-y-6 flex flex-col w-full mt-6 p-7 rounded-lg shadow-4xl form-login"
             }
           >
             <div className="relative">
@@ -93,7 +93,7 @@ function Login() {
                 type="text"
                 placeholder="enter your email"
                 {...register("email", emailRules)}
-                className="rounded-md py-2 px-4 focus:outline-none focus:ring-1 focus:ring-blue-900 w-full"
+                className="rounded-md py-2 px-5 border border-gray-500 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full "
               />
               <p
                 className={`${
@@ -101,13 +101,13 @@ function Login() {
                     ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
                     : "visible block text-[8px] z-10 transition-all duration-300 -top-4 left-2 p-2 rounded-md"
                 } 
-                absolute ${bg} text-gray-800`}
+                absolute  p-to-in text-gray-800 `}
               >
                 enter your email
               </p>
 
               {errors.email && (
-                <p className="text-red-600 text-xs mt-1">
+                <p className="text-[#f7872c] text-xs ml-2 mt-1">
                   {errors.email.message}
                 </p>
               )}
@@ -119,31 +119,31 @@ function Login() {
                 type={passwordVisible ? "text" : "password"}
                 placeholder="enter your password"
                 {...register("password", passwordRules)}
-                className="rounded-md py-2 px-4 focus:outline-none focus:ring-1 focus:ring-blue-900 w-full "
+                className="rounded-md py-2 px-4 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full border border-gray-500"
               />
               <p
                 className={`${
                   isempty2
                     ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
-                    : "visible block text-[8px] z-10 transition-all duration-300 -top-4 left-2 p-2 rounded-md"
+                    : "visible block text-[8px] z-10 transition-all duration-300 -top-3 left-2 px-2 py-1 rounded-md"
                 } 
-                absolute ${bg} text-gray-800`}
+                absolute p-to-in text-gray-800`}
               >
                 enter your password
               </p>
               {errors.password && (
-                <p className="text-red-600 text-xs ml-3">
+                <p className="text-[#f7872c] text-xs ml-2 -mt-1">
                   {errors.password.message}
                 </p>
               )}
 
-              <div className="flex items-center space-x-2 ml-2 ">
+              <div className="flex items-center space-x-2 ml-2 mt-2 ">
                 <input
                   type="checkbox"
                   checked={passwordVisible}
                   onChange={() => setPasswordVisible(!passwordVisible)}
-                  className="rounded-full bg-blue-200 
-                        focus:ring-2 focus:ring-blue-300 foucs:bg-gray-600 transition-all duration-200 cursor-pointer"
+                  className="rounded-full  
+                        transition-all duration-200 cursor-pointer"
                 />
                 <p className=" text-gray-800 text-[12px]">Show Password</p>
               </div>
@@ -153,11 +153,17 @@ function Login() {
             <button
               disabled={loading}
               type="submit"
-              className={`bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-all duration-200
+              className={`bg-yellow-400 text-white py-2 px-4 rounded-md hover:bg-yellow-500 transition-all duration-200 -mt-2 
              ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {loading ? "Logging in..." : "Login"}
             </button>
+            <div className="relative ">
+                 <hr />
+                <p className="absolute -top-3 p-to-in left-1/2 -translate-x-1/2 px-4 py-1 ">or</p>
+                
+            </div>
+            <p className="w-full text-center bg-[#fee960] p-2 rounded-xl">contiune with google</p>
           </form>
         </div>
       </div>

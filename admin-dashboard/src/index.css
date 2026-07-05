@@ -16,7 +16,6 @@
   letter-spacing: 1.5px;
   margin: 0 0 6px 0;
 }
-
 .title-2 {
   color: #0f172a;
   font-size: 1.45rem;
@@ -39,13 +38,29 @@ body {
     font-family: Arial, sans-serif;
 }
 .login-container {
-   background:linear-gradient(to right, #384f78, #3861a9);
+    background:linear-gradient(to right, rgb(255, 244, 191),rgb(234, 224, 170), rgb(236, 227, 179));
+   animation: login .7s ;
+   
 }
-.form-container {
-      background:linear-gradient(to right, oklch(0.55 0.03 264.38), #426cba);
+@keyframes login {
+ from{
+  margin-top: 35px;
+  opacity: .2;
+ }
+ to{
+  margin-top: 16px;
+  opacity: 1;
+ }
 
 }
-.form-login {
+.form-container  {
+      background:linear-gradient(to left bottom, rgb(255, 231, 92),rgb(234, 224, 170), rgb(234, 231, 189));
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.p-to-in{
+        background:linear-gradient(to left bottom,rgb(234, 224, 170),rgb(234, 224, 170), rgb(234, 231, 189));
+
+}
+.p{
+  background-color: #fee960;
 }
