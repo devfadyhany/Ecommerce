@@ -1,0 +1,18 @@
+*{
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+}
+.login-container {
+   background:linear-gradient(to right, #384f78, #3861a9);
+}
+.form-container {
+      background:linear-gradient(to right, oklch(0.55 0.03 264.38), #426cba);
+
+}
+form {
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
