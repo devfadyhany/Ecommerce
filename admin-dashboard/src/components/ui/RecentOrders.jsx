@@ -88,10 +88,10 @@ const RecentOrders = () => {
     <section className="bg-white shadow-2xl my-7 px-5 py-6 rounded-2xl border border-gray-200">
       <div className="flex justify-between items-center mb-6">
         <div className="flex justify-between flex-col gap-2">
-          <h4 className=" text-blue-600 text-lg font-thin uppercase tracking-widest">
+          <h4 className=" text-blue-600 text-sm font-thin uppercase tracking-[0.35em]">
             Recent Orders
           </h4>
-          <h5 className="text-2xl">Latest Customer Activity</h5>
+          <h5 className="text-xl">Latest Customer Activity</h5>
         </div>
         <span className="text-blue-600 py-0.5 px-3 text-sm bg-blue-100 rounded-3xl">
           {recentOrders.length} {recentOrders.length === 1 ? "Order" : "Orders"}
