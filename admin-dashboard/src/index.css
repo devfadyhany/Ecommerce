@@ -3,13 +3,10 @@
 .card {
   background-color: #ffffff;
   padding: 24px 30px;
-  border-radius: 14px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   text-align: left;
   max-width: 100%;
   box-sizing: border-box;
-  margin: 250px;
 }
 
 .title {
@@ -40,7 +37,6 @@
 }
 body {
     font-family: Arial, sans-serif;
-    padding: 10px;
 }
 .login-container {
    background:linear-gradient(to right, #384f78, #3861a9);
