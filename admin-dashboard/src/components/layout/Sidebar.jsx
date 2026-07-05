@@ -56,8 +56,8 @@ const menuItems = [
   },
 ];
 
-function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+function Sidebar({ sidebarOpen, setSidebarOpen }) {
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
 
   return (
     <div
@@ -65,15 +65,15 @@ function Sidebar() {
         collapsed ? "w-20" : "w-72"
       } transition-all duration-500 bg-white border-r flex flex-col`}
     >
-     <div className="p-6">
-  <div className="flex items-center justify-between">
-    <div
-      onClick={() => collapsed && setCollapsed(false)}
-      className="flex items-center gap-3 cursor-pointer"
-    >
-      <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-        <LayoutDashboard className="text-white w-6 h-6" />
-      </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between">
+          <div
+            onClick={() => setCollapsed(!collapsed)}
+            className="flex items-center gap-3 cursor-pointer"
+          >
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <LayoutDashboard className="text-white w-6 h-6" />
+          </div>
 
       {!collapsed && (
         <div>
@@ -88,10 +88,10 @@ function Sidebar() {
     </div>
 
     {!collapsed && (
-      <button
-        onClick={() => setCollapsed(true)}
-        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
-      >
+    <button
+      onClick={() => setCollapsed(true)}
+      className="hidden md:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+    >
         <X className="w-5 h-5 dark:text-white" />
       </button>
     )}
