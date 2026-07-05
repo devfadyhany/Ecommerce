@@ -1,9 +1,32 @@
+import React from 'react';
+import Login from './login/Login.jsx';
+import { BrowserRouter, Route ,Routes } from 'react-router';
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AppRouter from "./router/AppRouter"; 
+
 function App() {
 
 
   return (
-    <>
-      <h1 className="text-4xl font-bold text-blue-600">Admin Dashboard</h1>
+
+    <> 
+
+    
+      <AppRouter />
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
+
     </>
   );
 }
