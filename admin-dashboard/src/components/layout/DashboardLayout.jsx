@@ -1,19 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router";
 
 function DashboardLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-      />
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      <main className="flex-1">
+      <main
+        className={`flex-1 transition-all duration-500 ${
+          collapsed ? "ml-20" : "ml-72"
+        }`}
+      >
         <Navbar />
         <Outlet />
       </main>

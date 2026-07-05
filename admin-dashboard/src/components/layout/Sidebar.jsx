@@ -1,4 +1,3 @@
-import { useState } from "react";
 import profile from "../../assets/profile.jpg";
 import { NavLink } from "react-router-dom";
 import {
@@ -56,14 +55,12 @@ const menuItems = [
   },
 ];
 
-function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 768);
-
+function Sidebar({ collapsed, setCollapsed }) {
   return (
     <div
       className={`${
         collapsed ? "w-20" : "w-72"
-      } transition-all duration-500 bg-white border-r flex flex-col`}
+      } fixed top-0 left-0 h-screen transition-all duration-500 bg-white border-r flex flex-col`}
     >
       <div className="p-6">
         <div className="flex items-center justify-between">
@@ -71,33 +68,32 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             onClick={() => setCollapsed(!collapsed)}
             className="flex items-center gap-3 cursor-pointer"
           >
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <LayoutDashboard className="text-white w-6 h-6" />
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <LayoutDashboard className="text-white w-6 h-6" />
+            </div>
+
+            {!collapsed && (
+              <div>
+                <h1 className="text-xl font-bold dark:text-white">
+                  Admin Panel
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Commerce
+                </p>
+              </div>
+            )}
           </div>
 
-      {!collapsed && (
-        <div>
-          <h1 className="text-xl font-bold dark:text-white">
-            Admin Panel
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Commerce
-          </p>
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed(true)}
+              className="hidden md:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+            >
+              <X className="w-5 h-5 dark:text-white" />
+            </button>
+          )}
         </div>
-      )}
-    </div>
-
-    {!collapsed && (
-    <button
-      onClick={() => setCollapsed(true)}
-      className="hidden md:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
-    >
-        <X className="w-5 h-5 dark:text-white" />
-      </button>
-    )}
-  </div>
-</div>
-
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2">
@@ -112,15 +108,15 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 `flex items-center ${
                   collapsed ? "justify-center" : "gap-3"
                 } p-3 rounded-lg transition ${
-                  isActive
-                    ? "bg-blue-100 text-blue-600"
-                    : "hover:bg-gray-100"
+                  isActive ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
                 }`
               }
             >
               <Icon className="w-5 h-5" />
 
-              {!collapsed && <span className="text-lg font-medium">{item.title}</span>}
+              {!collapsed && (
+                <span className="text-lg font-medium">{item.title}</span>
+              )}
             </NavLink>
           );
         })}
@@ -129,11 +125,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       {/* Profile */}
       <div className="p-4 border-t">
         <div className="flex items-center gap-3">
-          <img
-            src={profile}
-            alt="profile"
-            className="w-10 h-10 rounded-full"
-          />
+          <img src={profile} alt="profile" className="w-10 h-10 rounded-full" />
 
           {!collapsed && (
             <div>
