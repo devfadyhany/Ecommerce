@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext"; 
 
 const emailRules = {
   required: "Email is required",
@@ -21,7 +22,8 @@ const passwordRules = {
 
 function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  
+  const { login ,loading } = useAuth(); 
 
   const {
     register,
@@ -36,11 +38,8 @@ function Login() {
   const isempty = emailValue.trim() === "";
   const isempty2 = passwordValue.trim() === "";
 
-
   const handleLogin = async (data) => {
-    setLoading(true);
-    localStorage.setItem("email", data.email);
-    localStorage.setItem("password", data.password);
+
 
     try {
       const res = await api.post("/auth/login", {
@@ -48,21 +47,25 @@ function Login() {
         password: data.password,
       });
 
-      setLoading(false);
-      alert("successfully logged in");
-      console.log("Data received (Token):", res.data);
+      if (res.data) {
+        const userObj = res.data.user;
+        const tokenStr = res.data.token;
+
+        login(userObj, tokenStr);
+        alert("successfully logged in");
+        console.log("Data received (Token):", tokenStr);
+      }
     } catch (err) {
-      setLoading(false);
       alert("Failed to login: " + (err.response?.data?.message || err.message));
     }
   };
 
   return (
     <>
-      <div className="gap-4 m-4 p-4 bg-gray-900 rounded-lg flex justify-between login-container">
-        <div className="flex-1 h-128 dleft rounded-lg shrink-1 hidden md:block">
+      <div className="mx-auto w-[70%] gap-4 m-4 p-4 bg-gray-900 rounded-lg flex justify-between login-container">
+        <div className="flex-3 h-128 dleft rounded-lg shrink-1 hidden lg:block">
           <h2 className="text-[25px] m-5 text-gray-900">Koda Commerce</h2>
-          <h1 className="text-[35px] mt-12 text-gray-900">
+          <h1 className="text-[30px] mt-12 text-gray-900">
             Manage Your Store Like a Pro
           </h1>
           <ul className="space-y-4 mt-20 text-gray-800 text-[16px]">
@@ -76,16 +79,14 @@ function Login() {
           </ul>
         </div>
 
-        <div className="flex-1 h-128 bg-gray-500 rounded-lg shadow-md p-7 px-20 form-container shrink-0">
-          <h2 className="text-4xl font-bold text-gray-800 text-center mt-10">
+        <div className="lg:flex-4 w-full h-128  rounded-lg shadow-md  lg:p-5 p-2 form-container ">
+          <h2 className="text-4xl font-bold text-gray-800 text-center mt-13">
             Login
           </h2>
-
           <form
             onSubmit={handleSubmit(handleLogin)}
             className={
-              
-              "relative space-y-6 flex flex-col w-full mt-6 p-7 rounded-lg shadow-4xl form-login"
+              "relative space-y-7 flex flex-col w-full mt-13  shadow-4xl form-login"
             }
           >
             <div className="relative">
@@ -100,12 +101,10 @@ function Login() {
                   isempty
                     ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
                     : "visible block text-[8px] z-10 transition-all duration-300 -top-4 left-2 p-2 rounded-md"
-                } 
-                absolute  p-to-in text-gray-800 `}
+                } absolute p-to-in text-gray-800 `}
               >
                 enter your email
               </p>
-
               {errors.email && (
                 <p className="text-[#f7872c] text-xs ml-2 mt-1">
                   {errors.email.message}
@@ -113,7 +112,6 @@ function Login() {
               )}
             </div>
 
-            {/* حقل كلمة المرور */}
             <div className="relative space-y-2">
               <input
                 type={passwordVisible ? "text" : "password"}
@@ -126,8 +124,7 @@ function Login() {
                   isempty2
                     ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
                     : "visible block text-[8px] z-10 transition-all duration-300 -top-3 left-2 px-2 py-1 rounded-md"
-                } 
-                absolute p-to-in text-gray-800`}
+                } absolute p-to-in text-gray-800`}
               >
                 enter your password
               </p>
@@ -136,14 +133,12 @@ function Login() {
                   {errors.password.message}
                 </p>
               )}
-
               <div className="flex items-center space-x-2 ml-2 mt-2 ">
                 <input
                   type="checkbox"
                   checked={passwordVisible}
                   onChange={() => setPasswordVisible(!passwordVisible)}
-                  className="rounded-full  
-                        transition-all duration-200 cursor-pointer"
+                  className="rounded-full transition-all duration-200 cursor-pointer"
                 />
                 <p className=" text-gray-800 text-[12px]">Show Password</p>
               </div>
@@ -153,17 +148,12 @@ function Login() {
             <button
               disabled={loading}
               type="submit"
-              className={`bg-yellow-400 text-white py-2 px-4 rounded-md hover:bg-yellow-500 transition-all duration-200 -mt-2 
-             ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`bg-yellow-400 text-white py-2 px-4 rounded-md hover:bg-yellow-500 transition-all duration-200 -mt-2 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {loading ? "Logging in..." : "Login"}
             </button>
-            <div className="relative ">
-                 <hr />
-                <p className="absolute -top-3 p-to-in left-1/2 -translate-x-1/2 px-4 py-1 ">or</p>
-                
-            </div>
-            <p className="w-full text-center bg-[#fee960] p-2 rounded-xl">contiune with google</p>
           </form>
         </div>
       </div>
@@ -172,3 +162,5 @@ function Login() {
 }
 
 export default Login;
+
+
