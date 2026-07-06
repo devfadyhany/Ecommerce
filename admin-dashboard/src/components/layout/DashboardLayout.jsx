@@ -24,8 +24,10 @@ function DashboardLayout() {
           collapsed ? "ml-20" : "ml-72"
         }`}
       >
-        <Navbar />
-        <Outlet />
+        <Navbar collapsed={collapsed} />
+        <div className="pt-20">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
