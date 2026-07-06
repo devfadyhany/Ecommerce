@@ -2,7 +2,8 @@ import { useState } from "react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import api from "../api/axios";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const emailRules = {
   required: "Email is required",
@@ -22,8 +23,8 @@ const passwordRules = {
 
 function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  
-  const { login ,loading } = useAuth(); 
+  const navigate = useNavigate();
+  const { login, loading } = useAuth();
 
   const {
     register,
@@ -39,8 +40,6 @@ function Login() {
   const isempty2 = passwordValue.trim() === "";
 
   const handleLogin = async (data) => {
-
-
     try {
       const res = await api.post("/auth/login", {
         email: data.email,
@@ -52,8 +51,7 @@ function Login() {
         const tokenStr = res.data.token;
 
         login(userObj, tokenStr);
-        alert("successfully logged in");
-        console.log("Data received (Token):", tokenStr);
+        navigate("/dashboard");
       }
     } catch (err) {
       alert("Failed to login: " + (err.response?.data?.message || err.message));
@@ -72,7 +70,9 @@ function Login() {
             <li className="w-full bg-[#e4cc8d] rounded-xl p-4">
               ✓ Product Management
             </li>
-            <li className="w-full bg-[#e4cc8d] rounded-xl p-4">✓ Order Tracking</li>
+            <li className="w-full bg-[#e4cc8d] rounded-xl p-4">
+              ✓ Order Tracking
+            </li>
             <li className="w-full bg-[#e4cc8d] rounded-xl p-4">
               ✓ Customer Insights
             </li>
@@ -162,5 +162,3 @@ function Login() {
 }
 
 export default Login;
-
-
