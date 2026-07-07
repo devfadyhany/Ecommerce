@@ -1,3 +1,26 @@
+:root {
+  --sef-text-primary: #1a1a1a;    
+  --sef-text-secondary: #6c757d; 
+
+  --sef-bg-primary: #ffffff;      
+  --sef-bg-secondary: #f4f6f9;    
+}
+
+.sef-text-primary {
+  color: var(--sef-text-primary) !important;
+}
+.sef-text-secondary {
+  color: var(--sef-text-secondary) !important;
+}
+
+
+.sef-bg-primary {
+  background-color: var(--sef-bg-primary) !important;
+}
+.sef-bg-secondary {
+  background-color: var(--sef-bg-secondary) !important;
+}
+
 @import "tailwindcss";
 
 .card {
