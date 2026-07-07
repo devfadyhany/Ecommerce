@@ -96,9 +96,9 @@ function Login() {
                 type="text"
                 placeholder="enter your email"
                 {...register("email", emailRules)}
-                className="rounded-md py-2 px-3 border border-gray-500 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full pl-10"
+                className="rounded-md py-2 px-3 border border-gray-500 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full pl-11"
               />
-              <p className="absolute text-2xl top-2 left-2"><MdOutlinePassword/></p>
+              <p className="absolute text-xl top-[10px] left-3"><FaEnvelope /></p>
               <p
                 className={`${
                   isempty
@@ -120,9 +120,9 @@ function Login() {
                 type={passwordVisible ? "text" : "password"}
                 placeholder="enter your password"
                 {...register("password", passwordRules)}
-                className="rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full border border-gray-500 pl-10"
+                className="rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full border border-gray-500 pl-11"
               />
-              <p className="absolute text-xl top-[12px] left-[13px]"><FaEnvelope /></p>
+              <p className="absolute text-2xl top-2 left-3"><MdOutlinePassword/></p>
               <p
                 className={`${
                   isempty2
