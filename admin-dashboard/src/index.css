@@ -36,10 +36,9 @@
 }
 body {
     font-family: Arial, sans-serif;
-    background-color: #fffbe2;
 }
 .login-container {
-    background:linear-gradient(to right, rgb(255, 244, 191),rgb(234, 224, 170), rgb(236, 227, 179));
+
    animation: login .7s ;
    
 }
@@ -49,19 +48,19 @@ body {
   opacity: .2;
  }
  to{
-  margin-top: 16px;
+  align-items: center;
   opacity: 1;
  }
 
 }
 .form-container  {
-      background:linear-gradient(to left bottom, rgb(255, 231, 92),rgb(234, 224, 170), rgb(234, 231, 189));
+      background:linear-gradient(to left bottom, rgb(255, 242, 167),#fff5bc, rgb(255, 253, 228));
 
 }
 .p-to-in{
-        background:linear-gradient(to left bottom,rgb(234, 224, 170),rgb(234, 224, 170), rgb(234, 231, 189));
+      background:linear-gradient(to left bottom,rgb(255, 245, 190),#fcf3bf);
 
 }
-.p{
-  background-color: #fee960;
+.d-login{
+    background:linear-gradient(to right bottom, rgb(255, 250, 233),#fff3b2,#ffe867, rgb(211, 186, 77));
 }
