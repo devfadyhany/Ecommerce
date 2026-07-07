@@ -2,7 +2,7 @@ import HeaderCard from "../components/ui/HeaderCard";
 import InfoSection from "../components/ui/InfoSection";
 import OrderStatus from "../components/ui/OrderStatus";
 import RecentOrders from "../components/ui/RecentOrders";
-// import TopProducts from "../components/ui/TopProducts";
+ import TopProducts from "../components/ui/TopProducts";
 
 function Dashboard() {
   return (
@@ -12,7 +12,7 @@ function Dashboard() {
         <InfoSection />
         <OrderStatus />
         <RecentOrders />
-        {/* <TopProducts /> */}
+        <TopProducts />
       </div>
     </div>
   );
