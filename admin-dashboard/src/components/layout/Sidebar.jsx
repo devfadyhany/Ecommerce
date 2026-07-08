@@ -56,6 +56,8 @@ const menuItems = [
 ];
 
 function Sidebar({ collapsed, setCollapsed }) {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <div
       className={`${
@@ -115,7 +117,7 @@ function Sidebar({ collapsed, setCollapsed }) {
               <Icon className="w-5 h-5" />
 
               {!collapsed && (
-                <span className="text-lg font-medium">{item.title}</span>
+                <span className="text-medium font-medium">{item.title}</span>
               )}
             </NavLink>
           );
@@ -125,12 +127,16 @@ function Sidebar({ collapsed, setCollapsed }) {
       {/* Profile */}
       <div className="p-4 border-t">
         <div className="flex items-center gap-3">
-          <img src={profile} alt="profile" className="w-10 h-10 rounded-full" />
+          <img
+            src={user?.avatar}
+            alt="profile"
+            className="w-10 h-10 rounded-full"
+          />
 
           {!collapsed && (
             <div>
-              <p className="font-semibold">Sara Adel</p>
-              <p className="text-sm text-gray-500">Administrator</p>
+              <p className="font-semibold">{user?.username}</p>
+              <p className="text-sm text-gray-500">{user?.role}</p>
             </div>
           )}
         </div>

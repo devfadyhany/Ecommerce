@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 
 const STATUS_META = {
   pending: {
@@ -28,25 +27,16 @@ const STATUS_META = {
   },
 };
 
-
-const OrderStatus = () => {
-  const [stats, setStats] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const OrderStatusApi = async () => {
-      try {
-        const response = await axios.get(
-          "https://e-commerce-api-3wara.vercel.app/api-docs#/Orders/get_orders_my",
-        );
-        setStats(response.data);
-      } catch (error) {
-        setError(error.response?.data?.message);
-      }
-    };
-    OrderStatusApi();
-  }, []);
+const OrderStatus = ({ stats }) => {
+  if (!stats) {
+    return (
+      <div className="p-5 rounded-3xl shadow-xl border border-gray-200 bg-white">
+        <div className="animate-pulse text-slate-400 text-sm">
+          Loading order stats...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -66,25 +56,19 @@ const OrderStatus = () => {
           </span>
         </div>
 
-        {loading && <p className="text-gray-400">Loading...</p>}
-
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-
-        {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-7 transition-all duration-800">
-            {Object.entries(STATUS_META).map(([key, { label, style }]) => (
-              <div
-                key={key}
-                className={`p-3 sm:p-4 rounded-3xl space-y-2 sm:space-y-2.5 border opacity-70 ${style}`}
-              >
-                <p className={`text-md font-extralight tracking-[0.2em]`}>
-                  {label}
-                </p>
-                <p className="font-bold text-2xl">{stats[key] ?? 0}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-7 transition-all duration-800">
+          {Object.entries(STATUS_META).map(([key, { label, style }]) => (
+            <div
+              key={key}
+              className={`p-3 sm:p-4 rounded-3xl space-y-2 sm:space-y-2.5 border opacity-70 ${style}`}
+            >
+              <p className="text-md font-extralight tracking-[0.2em]">
+                {label}
+              </p>
+              <p className="font-bold text-2xl">{stats[key] ?? 0}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

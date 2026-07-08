@@ -19,9 +19,9 @@ function AppRouter() {
 
         <Route
           element={
-            // <ProtectedRoute>
-            <DashboardLayout />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
           }
         >
           <Route path="/" element={<Navigate to="/dashboard" />} />
