@@ -10,7 +10,7 @@ const Navbar = ({ collapsed }) => {
 
   return (
     <nav
-      className={`fixed top-0 right-0 z-40 flex justify-between items-center bg-white p-4 border-b shadow-sm transition-all duration-500 ${
+      className={`fixed top-0 right-0 z-40 flex justify-between items-center bg-white px-8 py-4 border-b shadow-sm transition-all duration-500 ${
         collapsed ? "left-20" : "left-72"
       }`}
     >
@@ -56,7 +56,7 @@ const Navbar = ({ collapsed }) => {
           }}
           className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white rounded-xl px-2 sm:px-4 py-2 text-sm font-medium"
         >
-          <FiLogOut size={18} />
+          <FiLogOut size={20} />
           <span className="hidden sm:inline">Logout</span>
         </button>
       </div>

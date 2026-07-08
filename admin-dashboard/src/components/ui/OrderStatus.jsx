@@ -25,6 +25,10 @@ const STATUS_META = {
     label: "Cancelled",
     style: "bg-rose-500/10 text-rose-600/80 border-rose-400/30",
   },
+  returned: {
+    label: "Returned",
+    style: "bg-fuchsia-500/10 text-fuchsia-600/80 border-fuchsia-400/30",
+  },
 };
 
 const OrderStatus = ({ stats }) => {

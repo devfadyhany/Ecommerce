@@ -34,8 +34,10 @@ function Login() {
   }
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
+  const { login } = useAuth();
 
   const {
     register,
@@ -52,6 +54,7 @@ function Login() {
 
   const handleLogin = async (data) => {
     try {
+      setLoading(true);
       const res = await api.post("/auth/login", {
         email: data.email,
         password: data.password,
@@ -67,6 +70,8 @@ function Login() {
       }
     } catch (err) {
       alert("Failed to login: " + (err.response?.data?.message || err.message));
+    } finally {
+      setLoading(false);
     }
   };
 
