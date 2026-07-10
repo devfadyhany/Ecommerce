@@ -1,4 +1,4 @@
-import profile from "../../assets/profile.jpg";
+
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
