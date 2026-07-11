@@ -70,6 +70,10 @@ const AddProduct = ({ isEditMode = false }) => {
     }
   };
 
+  const handleRemoveTag = (indexToRemove) => {
+    setTags(tags.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -450,10 +454,14 @@ const AddProduct = ({ isEditMode = false }) => {
                     className="flex items-center gap-1 px-3 py-1 bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium rounded-full"
                   >
                     {tag}
+
                     <button
                       type="button"
-                      onClick={() => handleRemoveImage(idx)}
-                      className="text-slate-400 hover:text-slate-600"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRemoveTag(idx);
+                      }}
+                      className="text-slate-400 hover:text-slate-600 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
                     >
                       <X size={12} />
                     </button>
