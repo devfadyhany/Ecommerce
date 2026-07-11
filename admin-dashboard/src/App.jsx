@@ -1,27 +1,21 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AppRouter from "./router/AppRouter";
+import { useState } from "react";
+import DeleteConfirmationModal from "./components/ui/DeleteConfirmationModal";
 
 function App() {
+     const [isOpen, setIsOpen] = useState(true);
   return (
     <>
-      <AppRouter />
-
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        draggable
-        theme="light"
-      />
+          {isOpen && <DeleteConfirmationModal
+          title="Delete User"
+          message="Are You sure you want to delete this user?"
+          onCancel={() =>setIsOpen(false)}
+          onDelete={()=>{
+            alert("User Deleted");
+            setIsOpen(false);
+          }} />}
     </>
+    
   );
 }
 
-export default App;
+export default App; 
