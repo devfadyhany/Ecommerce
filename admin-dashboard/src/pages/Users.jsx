@@ -1,7 +1,11 @@
+
+
+import EditUserModal from "../components/ui/EditUserModal";
+
 function Users() {
   return (
-    <div className="p-6 text-3xl font-bold">
-      Users
+    <div className="p-6">
+      <EditUserModal />
     </div>
   );
 }
