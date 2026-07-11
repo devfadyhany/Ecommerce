@@ -1,32 +1,28 @@
-import {
-  Package,
-  SquarePen,
-  Trash2,
-} from "lucide-react";
+import { Package, SquarePen, Trash2 } from "lucide-react";
 
 function ProductsTable({ products, onDelete, onEdit }) {
   return (
-    <div className="overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-md w-[80%] mx-auto">
+    <div className="overflow-x-auto bg-card rounded-t-2xl border border-card-line shadow-md w-full mx-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b bg-gray-100/70">
-            <th className="p-4 text-left text-sm font-semibold text-gray-600">
+          <tr className="border-b border-card-line bg-surface-fields">
+            <th className="p-4 text-left text-sm font-semibold text-ink-soft">
               Product
             </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-gray-600">
+            <th className="p-4 text-left text-sm font-semibold text-ink-soft">
               Category
             </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-gray-600">
+            <th className="p-4 text-left text-sm font-semibold text-ink-soft">
               Price
             </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-gray-600">
+            <th className="p-4 text-left text-sm font-semibold text-ink-soft">
               Stock
             </th>
 
-            <th className="p-4 text-left text-sm font-semibold text-gray-600">
+            <th className="p-4 text-left text-sm font-semibold text-ink-soft">
               Actions
             </th>
           </tr>
@@ -35,7 +31,7 @@ function ProductsTable({ products, onDelete, onEdit }) {
         <tbody>
           {products.length === 0 ? (
             <tr>
-              <td colSpan="5" className="p-6 text-center text-gray-500">
+              <td colSpan="5" className="p-6 text-center text-ink-soft">
                 No products found
               </td>
             </tr>
@@ -43,35 +39,29 @@ function ProductsTable({ products, onDelete, onEdit }) {
             products.map((product) => (
               <tr
                 key={product.id}
-                className="border-b border-gray-100 hover:bg-gray-50 transition"
+                className="border-b border-card-line hover:bg-surface-fields transition"
               >
                 <td className="p-4 flex items-center gap-3">
-                  <div className="p-3 rounded-full bg-blue-50 text-blue-600">
+                  <div className="p-3 rounded-full bg-gold-light text-gold-deep">
                     <Package size={24} />
                   </div>
 
-                  <span className="font-semibold text-lg text-gray-800">
+                  <span className="font-semibold text-lg text-ink">
                     {product.name}
                   </span>
                 </td>
 
-                <td className="p-4 text-gray-600">
-                  {product.category}
-                </td>
+                <td className="p-4 text-ink-soft">{product.category}</td>
 
-                <td className="p-4 text-gray-600">
-                  ${product.price}
-                </td>
+                <td className="p-4 text-ink-soft">${product.price}</td>
 
-                <td className="p-4 text-gray-600">
-                  {product.stock}
-                </td>
+                <td className="p-4 text-ink-soft">{product.stock}</td>
 
                 <td className="p-4">
                   <div className="flex gap-2">
                     <button
                       onClick={() => onEdit(product.id)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                      className="p-2 text-gold hover:bg-gold-light rounded-lg transition"
                       title="Edit"
                     >
                       <SquarePen size={19} />
