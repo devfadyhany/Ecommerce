@@ -9,7 +9,7 @@ export const products = [
   {
     id: 2,
     name: "product-2",
-    category: "Mobile",
+    category: "Books",
     price: 1200,
     stock: 10,
   },
@@ -49,7 +49,7 @@ export const products = [
    {
     id: 7,
     name: "product-7",
-    category: "Mobile",
+    category: "Books",
     price: 1200,
     stock: 10,
   },
@@ -65,7 +65,7 @@ export const products = [
    {
     id: 9,
     name: "product-9",
-    category: "Mobile",
+    category: "Laptop",
     price: 1200,
     stock: 10,
   },
@@ -81,7 +81,7 @@ export const products = [
    {
     id: 11,
     name: "product-11",
-    category: "Mobile",
+    category: "Books",
     price: 1200,
     stock: 10,
   },
@@ -89,7 +89,7 @@ export const products = [
    {
     id: 12,
     name: "product-12",
-    category: "Mobile",
+    category: "Accessories",
     price: 1200,
     stock: 10,
   },
@@ -103,7 +103,7 @@ export const products = [
   },
     {
     id: 14,
-    name: "product-10",
+    name: "product-14",
     category: "Mobile",
     price: 1200,
     stock: 10,
@@ -111,15 +111,15 @@ export const products = [
 
    {
     id: 15,
-    name: "product-11",
-    category: "Mobile",
+    name: "product-15",
+    category: "Accessories",
     price: 1200,
     stock: 10,
   },
 
    {
     id: 16,
-    name: "product-12",
+    name: "product-16",
     category: "Mobile",
     price: 1200,
     stock: 10,
@@ -127,8 +127,8 @@ export const products = [
 
    {
     id: 17,
-    name: "product-13",
-    category: "Mobile",
+    name: "product-17",
+    category: "Laptop",
     price: 1200,
     stock: 10,
   },
