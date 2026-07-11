@@ -9,15 +9,15 @@ const formatDate = (dateStr) =>
 
 const RecentOrders = ({ orders = [] }) => {
   return (
-    <section className="bg-white shadow-2xl my-7 px-5 py-6 rounded-2xl border border-gray-200">
+    <section className="bg-card shadow-2xl my-7 px-5 py-6 rounded-2xl border border-card-line">
       <div className="flex justify-between items-center mb-6">
         <div className="flex justify-between flex-col gap-2">
-          <h4 className=" text-blue-600 text-sm font-thin uppercase tracking-[0.35em]">
+          <h4 className="text-gold text-sm font-thin uppercase tracking-[0.35em]">
             Recent Orders
           </h4>
-          <h5 className="text-xl">Latest Customer Activity</h5>
+          <h5 className="text-xl text-ink">Latest Customer Activity</h5>
         </div>
-        <span className="text-blue-600 py-0.5 px-3 text-sm bg-blue-100 rounded-3xl">
+        <span className="text-gold-deep py-0.5 px-3 text-sm bg-gold-light rounded-3xl">
           {orders.length} {orders.length === 1 ? "Order" : "Orders"}
         </span>
       </div>

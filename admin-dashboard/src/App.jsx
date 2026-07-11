@@ -1,21 +1,27 @@
-import { useState } from "react";
-import DeleteConfirmationModal from "./components/ui/DeleteConfirmationModal";
+import { ToastContainer } from "react-toastify";
+import AppRouter from "./router/AppRouter";
+import { DropFromTop } from "./utils/toastTransition";
 
 function App() {
-     const [isOpen, setIsOpen] = useState(true);
   return (
     <>
-          {isOpen && <DeleteConfirmationModal
-          title="Delete User"
-          message="Are You sure you want to delete this user?"
-          onCancel={() =>setIsOpen(false)}
-          onDelete={()=>{
-            alert("User Deleted");
-            setIsOpen(false);
-          }} />}
+      <AppRouter />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+        transition={DropFromTop}
+        toastClassName="!rounded-2xl !border !border-card-line !shadow-lg !p-3 !min-h-0"
+        bodyClassName="!p-0 !text-sm !font-medium"
+      />
     </>
-    
   );
 }
 
-export default App; 
+export default App;
