@@ -1,51 +1,54 @@
 import React from "react";
 import { Link, useNavigate } from "react-router";
-import { FiBell, FiMoon, FiLogOut } from "react-icons/fi";
+import { FiBell, FiMoon, FiLogOut, FiSun } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = ({ collapsed }) => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const { logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <nav
-      className={`fixed top-0 right-0 z-40 flex justify-between items-center bg-white px-8 py-4 border-b shadow-sm transition-all duration-500 ${
+      className={`fixed top-0 right-0 z-40 flex justify-between items-center bg-layout px-8 py-4 border-b border-line shadow-sm transition-all duration-500 ${
         collapsed ? "left-20" : "left-72"
       }`}
     >
       <div className="flex items-center gap-3">
         <img src="./logoo.svg" alt="Logo" className="size-12 rounded-full" />
-        <div className="capitalize">
-          <h1 className="text-base font-bold ">koda dashboard</h1>
-          <p className="text-xs text-gray-600">e-commerce admin panel</p>
+        <div className="capitalize hidden md:flex flex-col">
+          <h1 className="text-base font-bold text-ink">koda dashboard</h1>
+          <p className="text-xs text-ink-soft">e-commerce admin panel</p>
         </div>
       </div>
       <div className="flex items-center gap-4">
         <Link
           to="/notifications"
-          className="p-2 border bg-white rounded-xl text-gray-600 hover:bg-gray-50"
+          className="p-2 border border-line bg-layout rounded-xl text-ink-soft hover:bg-surface-fields"
         >
           <FiBell size={18} />
         </Link>
 
-        <button className="p-2 border bg-white rounded-xl text-gray-600 hover:bg-gray-50">
-          <FiMoon size={18} />
+        <button
+          onClick={toggleTheme}
+          className="p-2 border border-line bg-layout rounded-xl text-ink-soft hover:bg-surface-fields"
+        >
+          {theme === "dark" ? <FiSun size={18} /> : <FiMoon size={18} />}
         </button>
 
         <Link
           to="/profile"
-          className="hidden sm:flex items-center gap-2 border bg-white rounded-xl p-1 pr-3 py-2 hover:bg-gray-50"
+          className="group hidden sm:flex items-center gap-2 border border-line bg-layout rounded-xl p-1 pr-3 py-2 hover:bg-surface-fields"
         >
           <img
             src={user?.avatar}
-            className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm"
+            className="w-8 h-8 bg-gold text-on-gold rounded-full flex items-center justify-center font-bold text-sm"
           />
-          <div className="text-left capitalize bg-white hover:bg-gray-50">
-            <h2 className="text-xs font-semibold text-gray-800">
-              {user?.username}
-            </h2>
-            <p className="text-[10px] text-gray-400">{user?.role}</p>
+          <div className="text-left capitalize bg-layout group-hover:bg-surface-fields">
+            <h2 className="text-xs font-semibold text-ink">{user?.username}</h2>
+            <p className="text-[10px] text-ink-faint">{user?.role}</p>
           </div>
         </Link>
 
