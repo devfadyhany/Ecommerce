@@ -32,6 +32,12 @@
     #fcf6ba 50%,
     #b38728 100%
   );
+  --sef-gradient-gold-deep: linear-gradient(
+    135deg,
+    var(--sef-gold-dark) 0%,
+    var(--sef-gold-primary) 50%,
+    var(--sef-gold-dark) 100%
+  );
   --sef-gradient-gold-subtle: linear-gradient(135deg, #f7f2e9 0%, #f0d98c 100%);
   --sef-gradient-card-hover: linear-gradient(180deg, #ffffff 0%, #fbf6ec 100%);
   --sef-gradient-sidebar: linear-gradient(180deg, #ffffff 0%, #f7f2e9 100%);
@@ -77,6 +83,12 @@
     #9a7b2e 0%,
     #d4af37 50%,
     #f0d98c 100%
+  );
+  --sef-gradient-gold-deep: linear-gradient(
+    135deg,
+    #6b5220 0%,
+    #a9822f 50%,
+    #6b5220 100%
   );
   --sef-gradient-gold-subtle: linear-gradient(135deg, #1e1a16 0%, #3a3020 100%);
   --sef-gradient-card-hover: linear-gradient(180deg, #1e1a16 0%, #262119 100%);
