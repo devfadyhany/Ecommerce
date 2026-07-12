@@ -1,20 +1,8 @@
-import api from '../../api/axios';
 import ProductStatCard from './ProductStatCard';
 import { Package2, Star, TrendingUp, Boxes } from "lucide-react";
-import {useState, useEffect} from 'react';
 
-function ProductStats() {
-    const [products, setProducts] = useState([])
-    const [totalProducts, setTotalProducts] = useState(0)
-    useEffect(() => {
-        const fetchProducts = async () => {
-            const response = await api.get("/products/search")
-            const data = response.data
-            setProducts(data.products)
-            setTotalProducts(data.totalProducts)
-        }
-        fetchProducts()
-    }, [])
+
+function ProductStats({products, totalProducts}) {
     const featuredProducts = products.filter((product) =>(product.featured)).length
     const inStockProducts = products.filter((product) => (product.stock > 0)).length
     const outOfStockProducts = products.filter((product) => (product.stock === 0)).length
