@@ -1,3 +1,4 @@
+import React from "react";
 import api from "../../api/axios";
 
 const STATUS_META = {
@@ -31,7 +32,7 @@ const STATUS_META = {
   },
 };
 
-const OrderStatus = ({ stats }) => {
+const OrderStatus = React.memo(({ stats }) => {
   if (!stats) {
     return (
       <div className="p-5 rounded-3xl shadow-xl border border-card-line bg-card">
@@ -76,6 +77,6 @@ const OrderStatus = ({ stats }) => {
       </div>
     </>
   );
-};
+});
 
 export default OrderStatus;

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   LineChart,
   Line,
@@ -9,7 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 
-const RevenueChart = ({ revenue }) => {
+const RevenueChart = React.memo(({ revenue }) => {
   // for testing the rechart if revenue in Api less than 2 days
   const mockRevenue = [
     { _id: "2026-07-05", revenue: 900, orders: 2 },
@@ -126,6 +127,6 @@ const RevenueChart = ({ revenue }) => {
       </AreaChart>
     </div>
   );
-};
+});
 
 export default RevenueChart;

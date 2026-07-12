@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import HeaderCard from "../components/ui/HeaderCard";
 import InfoSection from "../components/ui/InfoSection";
 import OrderStatus from "../components/ui/OrderStatus";
@@ -15,38 +15,39 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const getDashboardData = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get("/orders/admin/dashboard");
-        setDashboard(res.data.dashboard);
-      } catch (err) {
-        console.error("Failed to fetch dashboard data:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const getDashboardData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/orders/admin/dashboard");
+      setDashboard(res.data.dashboard);
+    } catch (err) {
+      console.error("Failed to fetch dashboard data:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  const fetchOrders = useCallback(async () => {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const res = await api.get("/orders/admin", {
+      params: {
+        from: sevenDaysAgo.toISOString(),
+        limit: 7,
+      },
+    });
+
+    const revenueData = getLast7DaysRevenue(res.data.orders);
+    setRevenue(revenueData);
+  }, []);
+
+  useEffect(() => {
     getDashboardData();
   }, []);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-      const res = await api.get("/orders/admin", {
-        params: {
-          from: sevenDaysAgo.toISOString(),
-          limit: 20,
-        },
-      });
-
-      const revenueData = getLast7DaysRevenue(res.data.orders);
-      setRevenue(revenueData);
-    };
     fetchOrders();
   }, []);
 

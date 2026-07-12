@@ -1,4 +1,6 @@
-function TopProducts({ products = [] }) {
+import React from "react";
+
+const TopProducts = React.memo(({ products = [] }) => {
   return (
     <div className="bg-card rounded-2xl shadow-sm p-4 sm:p-5 lg:p-6 w-full">
       <div>
@@ -41,6 +43,6 @@ function TopProducts({ products = [] }) {
       </div>
     </div>
   );
-}
+});
 
 export default TopProducts;
