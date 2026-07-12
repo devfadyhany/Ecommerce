@@ -17,9 +17,15 @@ const Navbar = ({ collapsed }) => {
       }`}
     >
       <div className="flex items-center gap-3">
-        <img src="./logoo.svg" alt="Logo" className="size-12 rounded-full" />
+        <img
+          src={`${theme === "dark" ? "./logo-dark.png" : "./logo.png"}`}
+          alt="Logo"
+          className="size-12"
+        />
         <div className="capitalize hidden md:flex flex-col">
-          <h1 className="text-base font-bold text-ink">koda dashboard</h1>
+          <h1 className="text-base font-bold text-ink">
+            Elite <span className="text-gold">Cart</span>
+          </h1>
           <p className="text-xs text-ink-soft">e-commerce admin panel</p>
         </div>
       </div>
