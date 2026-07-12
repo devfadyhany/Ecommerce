@@ -4,11 +4,14 @@ import InfoSection from "../components/ui/InfoSection";
 import OrderStatus from "../components/ui/OrderStatus";
 import RecentOrders from "../components/ui/RecentOrders";
 import TopProducts from "../components/ui/TopProducts";
+import RevenueChart from "../components/ui/RevenueChart";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import api from "../api/axios";
+import { getLast7DaysRevenue } from "../utils/getRevenueByDay";
 
 function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
+  const [revenue, setRevenue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,6 +32,24 @@ function Dashboard() {
     getDashboardData();
   }, []);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const res = await api.get("/orders/admin", {
+        params: {
+          from: sevenDaysAgo.toISOString(),
+          limit: 20,
+        },
+      });
+
+      const revenueData = getLast7DaysRevenue(res.data.orders);
+      setRevenue(revenueData);
+    };
+    fetchOrders();
+  }, []);
+
   return (
     <div className="p-4 lg:p-8">
       {loading ? (
@@ -45,6 +66,7 @@ function Dashboard() {
             description="Monitor Your storefront with AI-style clarity and live API metrics."
           />
           <InfoSection dashboard={dashboard} />
+          <RevenueChart revenue={revenue} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <OrderStatus stats={dashboard.orders} />
             <TopProducts products={dashboard.topProducts} />
