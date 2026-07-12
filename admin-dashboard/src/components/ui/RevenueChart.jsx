@@ -29,10 +29,10 @@ const RevenueChart = ({ revenue }) => {
     <div className="h-80 w-full py-5 bg-card rounded-2xl shadow-lg p-6 border border-card-line">
       <div className="flex justify-between items-center mb-5">
         <div>
-          <h2 className="text-sm font-thin uppercase tracking-[0.35em] text-ink">
+          <h2 className="text-sm uppercase tracking-[0.35em] text-gold">
             Revenue Overview
           </h2>
-          <p className="text-sm text-ink-soft">Last 7 Days</p>
+          <p className="mt-2 text-xl font-medium text-ink">Last 7 Days</p>
         </div>
         <div className="text-right">
           <p className="text-xs text-ink-soft">Total</p>
