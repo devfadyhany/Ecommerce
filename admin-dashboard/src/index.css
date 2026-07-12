@@ -50,7 +50,7 @@
   --toastify-color-progress-dark: var(--sef-gold-primary);
   --toastify-toast-shadow: var(--sef-card-shadow);
   --toastify-toast-min-height: 44px;
-  --toastify-toast-width: 160px;
+  --toastify-toast-width: fit-content !important;
 }
 
 .dark {
@@ -248,6 +248,6 @@ button {
   );
 }
 
-.recharts-wrapper *:focus{
-    outline:none !important;
+.recharts-wrapper *:focus {
+  outline: none !important;
 }
