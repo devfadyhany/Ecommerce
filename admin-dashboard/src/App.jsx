@@ -1,9 +1,6 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import AppRouter from "./router/AppRouter";
+import { DropFromTop } from "./utils/toastTransition";
 
 function App() {
   return (
@@ -11,14 +8,17 @@ function App() {
       <AppRouter />
 
       <ToastContainer
-        position="bottom-right"
+        position="top-right"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop
         closeOnClick
         pauseOnHover
         draggable
-        theme="light"
+        theme="colored"
+        transition={DropFromTop}
+        toastClassName="!rounded-2xl !border !border-card-line !shadow-lg !p-3 !min-h-0"
+        bodyClassName="!p-0 !text-sm !font-medium"
       />
     </>
   );

@@ -5,6 +5,7 @@ import OrderStatus from "../components/ui/OrderStatus";
 import RecentOrders from "../components/ui/RecentOrders";
 import TopProducts from "../components/ui/TopProducts";
 import RevenueChart from "../components/ui/RevenueChart"
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import api from "../api/axios";
 
 function Dashboard() {
@@ -33,9 +34,7 @@ function Dashboard() {
   return (
     <div className="p-4 lg:p-8">
       {loading ? (
-        <div className="flex justify-center items-center h-screen">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-        </div>
+        <LoadingSpinner />
       ) : error ? (
         <div className="flex justify-center items-center h-screen text-rose-500">
           {error}
