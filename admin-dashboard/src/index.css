@@ -76,7 +76,7 @@ button {
 @keyframes showfile{
   from{
     opacity: 0;
-    top: 300px;
+    top: 350px;
   }
   to{
     opacity: 1;
@@ -84,7 +84,7 @@ button {
   }
 }
 .file-h{
-  visibility: hidden;
+  display: none;
 }
 .card {
   background-color: #ffffff;
@@ -160,4 +160,5 @@ button {
     var(--sef-gold-300),
     var(--sef-gold-500)
   );
+  position: absolute;
 }
