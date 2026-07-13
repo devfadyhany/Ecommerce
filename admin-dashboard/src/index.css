@@ -168,20 +168,20 @@ button {
 }
 
 /* ///////////////////////////// Components Styles ////////////////////////////// */
-.file-sh{
-  animation: showfile .5s;
+.file-sh {
+  animation: showfile 0.5s;
 }
-@keyframes showfile{
-  from{
+@keyframes showfile {
+  from {
     opacity: 0;
     top: 350px;
   }
-  to{
+  to {
     opacity: 1;
-   top: 50%;
+    top: 50%;
   }
 }
-.file-h{
+.file-h {
   display: none;
 }
 
@@ -262,7 +262,6 @@ button {
     var(--sef-gold-secondary),
     var(--sef-gold-primary)
   );
-  position: absolute;
 }
 
 .recharts-wrapper *:focus {
@@ -271,11 +270,11 @@ button {
 
 /* Thin Scrollbar */
 .thin-scrollbar {
-  scrollbar-width:none;
+  scrollbar-width: none;
 }
 
 .thin-scrollbar:hover {
-  scrollbar-width: thin; 
+  scrollbar-width: thin;
   scrollbar-color: var(--sef-border-color) transparent;
 }
 
@@ -291,7 +290,7 @@ button {
   background-color: transparent;
   border-radius: 999px;
   border: 2px solid transparent;
-  background-clip: padding-box; 
+  background-clip: padding-box;
 }
 
 .thin-scrollbar:hover::-webkit-scrollbar-thumb {
