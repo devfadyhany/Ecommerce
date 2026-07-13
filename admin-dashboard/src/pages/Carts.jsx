@@ -66,9 +66,7 @@ function UsercartsCard({ cartss }) {
       </div>
     </div>
   )
-}
-
-
+};
 
 
 
