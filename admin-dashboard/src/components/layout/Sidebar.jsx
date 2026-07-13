@@ -1,4 +1,3 @@
-import profile from "../../assets/profile.jpg";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -33,7 +32,7 @@ const menuItems = [
     id: 4,
     title: "Add Product",
     icon: PlusSquare,
-    path: "/add-product",
+    path: "/products/add",
   },
   {
     id: 5,

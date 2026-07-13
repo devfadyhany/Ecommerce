@@ -1,3 +1,4 @@
+import React from "react";
 import api from "../../api/axios";
 import InfoCard from "./InfoCard";
 
@@ -10,7 +11,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-function InfoSection({ dashboard }) {
+const InfoSection = React.memo(({ dashboard }) => {
   if (!dashboard) return null;
 
   const cards = [
@@ -65,6 +66,6 @@ function InfoSection({ dashboard }) {
       ))}
     </div>
   );
-}
+});
 
 export default InfoSection;
