@@ -4,8 +4,7 @@ import { ArrowLeft, Upload, Plus, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "react-toastify";
-import { showErrorToast } from "../utils/toastHelpers";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 import api from "../api/axios";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
@@ -45,6 +44,7 @@ const AddProduct = ({ isEditMode = false }) => {
   const [currentTag, setCurrentTag] = useState("");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
+  const [originalImages, setOriginalImages] = useState([]);
 
   const {
     register,
@@ -66,31 +66,25 @@ const AddProduct = ({ isEditMode = false }) => {
         try {
           setLoading(true);
           const response = await api.get(`/products/${id}`);
-          const product = response.data.data || response.data;
+          const product = response.data.product;
 
-          setValue("productName", product.name || product.title || "");
-          setValue(
-            "shortDesc",
-            product.shortDescription || product.shortDesc || "",
-          );
+          setValue("productName", product.name || "");
+          setValue("shortDesc", product.shortDescription || "");
           setValue("description", product.description || "");
           setValue("price", product.price || "");
-          setValue(
-            "discountPrice",
-            product.priceAfterDiscount || product.discountPrice || "",
-          );
-          setValue("stock", product.quantity || product.stock || "");
+          setValue("discountPrice", product.discountPrice || "");
+          setValue("stock", product.stock || "");
           setValue("sku", product.sku || "");
-          setValue("category", product.category || "electronics");
+          setValue("category", product.category || "");
           setValue("subCategory", product.subcategory || "");
           setValue("brand", product.brand || "");
-          setValue("isFeatured", product.isFeatured || false);
+          setValue("isFeatured", product.featured || false);
           setValue("isActive", product.isActive || true);
 
           setTags(product.tags || []);
           setImages(product.images || []);
+          setOriginalImages(product.images || []);
         } catch (error) {
-          console.error("Error fetching product details:", error);
           showErrorToast("Failed to load product data.");
         } finally {
           setLoading(false);
@@ -140,15 +134,17 @@ const AddProduct = ({ isEditMode = false }) => {
       formData.append("price", data.price);
       formData.append("stock", data.stock);
       formData.append("category", data.category);
-      formData.append("isFeatured", data.isFeatured);
+      formData.append("featured", data.isFeatured);
       formData.append("isActive", data.isActive);
       if (data.brand) formData.append("brand", data.brand);
       if (data.sku) formData.append("sku", data.sku);
       if (data.subCategory) formData.append("subcategory", data.subCategory);
       if (data.discountPrice)
-        formData.append("priceAfterDiscount", data.discountPrice);
+        formData.append("discountPrice", data.discountPrice);
 
-      formData.append("tags", JSON.stringify(tags));
+      if (tags.length > 0) {
+        tags.forEach((tag) => formData.append("tags", tag));
+      }
 
       if (images.length > 0) {
         images.forEach((img) => {
@@ -156,28 +152,32 @@ const AddProduct = ({ isEditMode = false }) => {
             formData.append("images", img.file);
           }
         });
+      }
 
-        const existingImages = images.filter((img) => !img.file);
-        if (existingImages.length > 0) {
-          formData.append("existingImages", JSON.stringify(existingImages));
-        }
+      const deletedImages = originalImages.filter(
+        (original) =>
+          !images.some((img) => img.public_id === original.public_id),
+      );
+
+      if (deletedImages.length > 0) {
+        formData.append(
+          "deletedImages",
+          JSON.stringify(deletedImages.map((img) => img.public_id)),
+        );
       }
 
       if (isEditMode) {
-        await api.put(`/products/${id}`, formData);
-        toast.success("Product updated successfully! 🎉");
+        await api.patch(`/products/update/${id}`, formData);
+        showSuccessToast("Product updated successfully");
       } else {
         await api.post(`/products`, formData);
-        toast.success("Product created successfully! 🚀");
+        showSuccessToast("Product created successfully");
       }
       navigate("/products");
     } catch (error) {
-      console.error("Error saving product:", error);
-      const backendErrors = error.response?.data?.errors;
-      const errorMessage = backendErrors
-        ? backendErrors.join("\n")
-        : error.response?.data?.message || "An error occurred.";
-      toast.error(errorMessage);
+      console.log(error.response.data);
+
+      showErrorToast("Error saving product");
     } finally {
       setSubmitting(false);
     }
