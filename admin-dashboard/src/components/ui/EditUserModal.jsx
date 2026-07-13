@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { showSuccessToast, showErrorToast } from "../../utils/toastHelpers";
 import api from "../../api/axios";
 
-function EditUserModal({ userId, onCancel }) {
+function EditUserModal({ userId, onCancel, onSuccess }) {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -37,6 +37,7 @@ function EditUserModal({ userId, onCancel }) {
       showErrorToast("Failed to update user");
     }
   };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div className="w-full max-w-[460px] rounded-3xl bg-card shadow-2xl p-6 mx-4">

@@ -1,14 +1,13 @@
 import { useState } from "react";
 import HeaderCard from "../components/ui/HeaderCard";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 function Settings() {
   const navigate = useNavigate();
+
+  const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-
-  // const { theme, setTheme } = useTheme();
-
-  const [selected, setSelected] = useState("theme");
 
   const options = ["Dark", "Light", "System"];
 
@@ -37,7 +36,7 @@ function Settings() {
               className="w-full bg-gold border border-gold-dark rounded-lg p-3 text-xl text-on-gold flex
           justify-between items-center shadow-md hover:bg-gold-deep transition-colors focus:outline-none"
             >
-              {selected}
+              {theme.charAt(0).toUpperCase() + theme.slice(1)}
               <span
                 className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
               >
@@ -57,7 +56,7 @@ function Settings() {
                 <button
                   key={option}
                   onClick={() => {
-                    setSelected(option);
+                    setTheme(option.toLowerCase());
                     setIsOpen(false);
                   }}
                   className="w-full text-right px-4 py-2 text-xl text-ink-soft hover:bg-gold-light
