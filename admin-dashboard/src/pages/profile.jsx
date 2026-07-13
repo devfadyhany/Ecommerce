@@ -28,7 +28,7 @@ const [editPhone, setEditPhone] = useState("");
                 try{
                      setLoading(true)
                      const res =await api.get("/auth/me") 
-                     console.log(res.data.user.updatedAt)
+                     
                    setUserData({
             username: res.data.user.username,
             email: res.data.user.email,
@@ -53,6 +53,7 @@ const [editPhone, setEditPhone] = useState("");
     
 
    const handleSave = async () => {
+    console.log(editEmail,editPhone,editUsername)
     try {
         setLoading(true);
 
@@ -63,8 +64,8 @@ const [editPhone, setEditPhone] = useState("");
         });
 
     
-                await apidataprofile();
-
+         await apidataprofile();
+            
       
         setOpenEdit(false);
 
@@ -97,21 +98,22 @@ const handleOpenEdit = () => {
    function inputdisabild2(valueEdit,title){
    
      const result=    <div className="flex-1 relative">
-                        <input type="text" disabled className=" w-full h-12 border rounded-md tracking-[1.5px] pt-4 pl-2"value={valueEdit}/>
+                        <input type="text" disabled className=" w-full h-12 border rounded-md tracking-[1.5px] pt-4 pl-2" value={valueEdit}/>
                         <p className="absolute top-[1px] left-2 text-sm text-blue-400">{title}</p>
                      </div>
        
      return result  
    }
-   function Editdata(val,placeholder){
-    const result =<input
-               className="w-full border p-2 rounded-md"
-                placeholder={placeholder}
-                value={val}
-                onChange={(e) => setEditPhone(e.target.value)}
-                />
-        return result
-   }
+   function Editdata(val, placeholder, change) {
+    return (
+        <input
+            className="w-full border p-2 rounded-md"
+            placeholder={placeholder}
+            value={val}
+            onChange={(e) => change(e.target.value)}
+        />
+    );
+}
    
 
     
@@ -167,9 +169,9 @@ if(loading){
                             <h2 className="text-2xl font-bold text-center">
                                 Update Profile
                             </h2>
-                              { Editdata(editUsername,"Username")}
-                              { Editdata(editEmail,"Email")}
-                              { Editdata(editPhone,"Phone")}
+                            {Editdata(editUsername, "Username", setEditUsername)}
+                            {Editdata(editEmail, "Email", setEditEmail)}
+                            {Editdata(editPhone, "Phone", setEditPhone)}
                             
                             <div className="flex justify-end gap-3">
 
