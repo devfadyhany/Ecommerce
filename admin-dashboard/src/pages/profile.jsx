@@ -19,7 +19,7 @@ const [openEdit, setOpenEdit] = useState(false);
 const [editUsername, setEditUsername] = useState("");
 const [editEmail, setEditEmail] = useState("");
 const [editPhone, setEditPhone] = useState("");
-        const numericDate = dayjs(userData.updatedAt)
+ const numericDate = dayjs(userData.updatedAt)
     
    
         useEffect(() => {
@@ -46,21 +46,20 @@ const [editPhone, setEditPhone] = useState("");
             }
             apidataprofile()
         }, [setUserData]);
-        
+  
 
 
-
-    
 
    const handleSave = async () => {
-    console.log(editEmail,editPhone,editUsername)
+    
     try {
         setLoading(true);
 
-        await api.patch("/auth/me", {
+        await api.patch("/users/{id}", {
             username: editUsername,
-            email: editEmail,
             phone: editPhone,
+            avatar: "https://example.com/avatar.png"
+
         });
 
     
@@ -90,7 +89,7 @@ const handleOpenEdit = () => {
     
     const result=     <div className="relative">
                         <input type="text" disabled className="w-full border h-12 rounded-md tracking-[1.5px] pt-4 pl-2" value={valueEdit}/>
-                           <p className="absolute top-[1px] text-sm left-2 text-blue-400">{title}</p>                                  
+                           <p className="absolute top-[1px] text-sm left-2 text-yellow-700">{title}</p>                                  
                         </div>
     return result
 
@@ -98,8 +97,8 @@ const handleOpenEdit = () => {
    function inputdisabild2(valueEdit,title){
    
      const result=    <div className="flex-1 relative">
-                        <input type="text" disabled className=" w-full h-12 border rounded-md tracking-[1.5px] pt-4 pl-2" value={valueEdit}/>
-                        <p className="absolute top-[1px] left-2 text-sm text-blue-400">{title}</p>
+                          <input type="text" disabled className=" w-full h-12 border rounded-md tracking-[1.5px] pt-4 pl-2" value={valueEdit}/>
+                        <p className="absolute top-[1px] left-2 text-sm text-yellow-700">{title}</p>
                      </div>
        
      return result  
@@ -128,26 +127,24 @@ if(loading){
         
         <>
             <div className="p-3 w-full h-175">
-                <div className="space-y-5 w-full h-175 bg-gray-300 rounded-xl pt-30 flex flex-col items-center ">
+                <div className="space-y-5 w-full h-175 bg-gray-100 rounded-xl pt-30 flex flex-col items-center ">
 
                     <div className="">
 
-                        <img src={userData.avatar} className="w-20 h-20" />
+                        <img src={userData.avatar || "../hero.pn"} className="w-20 h-20" />
                     </div>
-                    <div className="p-5 space-y-4 w-[90%] lg:w-[78%] h-auto bg-gray-500 rounded-xl">
-                      {inputdisabild(userData.username,"Your name")}
-                      {inputdisabild(userData.email, "Enail")}
-                      {inputdisabild(localStorage.getItem("password"),"Password")}
-                      {inputdisabild(userData.phone,"phone")}
-                       
+                    <div className="p-5 space-y-4 w-[90%] lg:w-[78%] h-auto bg-gray-300 rounded-xl">
 
-                        <div className="flex gap-4 ">
-                          
-                         {inputdisabild2(numericDate.year(),"Year")}
-                         {inputdisabild2(numericDate.format("DD/MMMM"),"Date")}
-                         {inputdisabild2(numericDate.format(" HH:mm"),"Time")}
+                            {inputdisabild(userData.username,"Your name")}
+                            {inputdisabild(userData.email, "Enail")}
+                            {inputdisabild(localStorage.getItem("password"),"Password")}
+                            {inputdisabild(userData.phone,"phone")}
 
-                            
+                        <div className="flex gap-4 "> 
+
+                            {inputdisabild2(numericDate.year(),"Year")}
+                            {inputdisabild2(numericDate.format("DD/MMMM"),"Date")}
+                            {inputdisabild2(numericDate.format(" HH:mm"),"Time")}
 
                         </div>
                                            
