@@ -124,7 +124,7 @@ function Sidebar({ collapsed, setCollapsed }) {
       </nav>
 
       {/* Profile */}
-      <div className="p-4 border-t border-line">
+      {/* <div className="p-4 border-t border-line">
         <div
           className={`flex items-center ${collapsed ? "justify-center" : "justify-start"} gap-3`}
         >
@@ -141,6 +141,33 @@ function Sidebar({ collapsed, setCollapsed }) {
             </div>
           )}
         </div>
+      </div> */}
+
+      {/* Connection Status */}
+      <div className="p-4 border-t border-line">
+        {collapsed ? (
+          <div className="flex justify-center">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-gold"></span>
+            </span>
+          </div>
+        ) : (
+          <div className="bg-[image:var(--sef-gradient-gold)] text-amber-950 rounded-2xl p-4 shadow-md">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="relative flex size-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-950 opacity-60"></span>
+                <span className="relative inline-flex rounded-full size-2 bg-amber-950"></span>
+              </span>
+              <span className="text-xs font-bold uppercase tracking-[0.25em]">
+                Live
+              </span>
+            </div>
+            <p className="text-sm font-bold leading-snug">
+              Connected to the E-commerce API
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
