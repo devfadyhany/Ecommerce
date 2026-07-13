@@ -20,7 +20,7 @@ function DashboardLayout() {
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <main
-        className={`flex-1 transition-all duration-500 ${
+        className={`flex-1 min-w-0 transition-all duration-500 ${
           collapsed ? "ml-20" : "ml-72"
         }`}
       >
