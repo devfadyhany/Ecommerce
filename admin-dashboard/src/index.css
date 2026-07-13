@@ -251,3 +251,50 @@ button {
 .recharts-wrapper *:focus {
   outline: none !important;
 }
+
+/* Thin Scrollbar */
+.thin-scrollbar {
+  scrollbar-width:none;
+}
+
+.thin-scrollbar:hover {
+  scrollbar-width: thin; 
+  scrollbar-color: var(--sef-border-color) transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box; 
+}
+
+.thin-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: var(--sef-border-color);
+  background-clip: padding-box;
+}
+
+.thin-scrollbar:hover::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sef-gold-primary);
+}
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: drawer-slide-in 0.25s ease-out;
+}
