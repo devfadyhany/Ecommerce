@@ -19,7 +19,7 @@ const [openEdit, setOpenEdit] = useState(false);
 const [editUsername, setEditUsername] = useState("");
 const [editEmail, setEditEmail] = useState("");
 const [editPhone, setEditPhone] = useState("");
-        const numericDate = dayjs(userData.updated_at)
+        const numericDate = dayjs(userData.updatedAt)
     
    
         useEffect(() => {
@@ -28,6 +28,7 @@ const [editPhone, setEditPhone] = useState("");
                 try{
                      setLoading(true)
                      const res =await api.get("/auth/me") 
+                     console.log(res.data.user.updatedAt)
                    setUserData({
             username: res.data.user.username,
             email: res.data.user.email,
@@ -55,7 +56,7 @@ const [editPhone, setEditPhone] = useState("");
     try {
         setLoading(true);
 
-        await api.put("/auth/me", {
+        await api.patch("/auth/me", {
             username: editUsername,
             email: editEmail,
             phone: editPhone,
@@ -104,12 +105,12 @@ const handleOpenEdit = () => {
    }
    function Editdata(val,placeholder){
     const result =<input
-                                className="w-full border p-2 rounded-md"
-                                placeholder={placeholder}
-                                value={val}
-                                onChange={(e) => setEditPhone(e.target.value)}
-                            />
-                            return result
+               className="w-full border p-2 rounded-md"
+                placeholder={placeholder}
+                value={val}
+                onChange={(e) => setEditPhone(e.target.value)}
+                />
+        return result
    }
    
 
