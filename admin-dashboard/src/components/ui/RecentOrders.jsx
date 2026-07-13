@@ -1,3 +1,4 @@
+import React from "react";
 import RecentOrderCard from "./RecentOrderCard";
 
 const formatDate = (dateStr) =>
@@ -7,7 +8,7 @@ const formatDate = (dateStr) =>
     year: "numeric",
   });
 
-const RecentOrders = ({ orders = [] }) => {
+const RecentOrders = React.memo(({ orders = [] }) => {
   return (
     <section className="bg-card shadow-2xl my-7 px-5 py-6 rounded-2xl border border-card-line">
       <div className="flex justify-between items-center mb-6">
@@ -39,6 +40,6 @@ const RecentOrders = ({ orders = [] }) => {
       ))}
     </section>
   );
-};
+});
 
 export default RecentOrders;

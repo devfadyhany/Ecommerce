@@ -83,7 +83,7 @@ function Login() {
           <div className="hidden lg:flex lg:w-1/2 rounded-l-3xl px-8 py-16 d-login justify-center items-center">
             <div className="space-y-4 text-on-gold">
               <h2 className="text-3xl ml-2 font-bold flex items-center">
-                <FiShoppingBag /> &nbsp; Koda Commerce
+                <FiShoppingBag /> &nbsp; Elite Cart
               </h2>
               <h1 className="text-5xl font-bold leading-snug">
                 Manage Your Store Like a Pro
@@ -110,7 +110,7 @@ function Login() {
           <div className="w-full lg:w-1/2 rounded-3xl lg:rounded-l-none lg:rounded-r-3xl p-2 py-24 form-container">
             <div className="h-full flex flex-col justify-center items-center">
               <div className="flex flex-col justify-center items-center mb-8">
-                <img src="./logoo.svg" className="size-16 mb-8" />
+                <img src="./logo.png" className="size-16 mb-8" />
                 <h2 className="text-3xl font-bold text-center mb-2 text-ink">
                   Welcome Back
                 </h2>

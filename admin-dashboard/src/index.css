@@ -168,6 +168,22 @@ button {
 }
 
 /* ///////////////////////////// Components Styles ////////////////////////////// */
+.file-sh{
+  animation: showfile .5s;
+}
+@keyframes showfile{
+  from{
+    opacity: 0;
+    top: 350px;
+  }
+  to{
+    opacity: 1;
+   top: 50%;
+  }
+}
+.file-h{
+  display: none;
+}
 
 .bg-card {
   background-color: var(--sef-card-bg);
@@ -246,6 +262,7 @@ button {
     var(--sef-gold-secondary),
     var(--sef-gold-primary)
   );
+  position: absolute;
 }
 
 .recharts-wrapper *:focus {

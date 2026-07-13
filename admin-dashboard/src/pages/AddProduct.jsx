@@ -1,9 +1,38 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Plus, X, Loader2 } from "lucide-react";
-import { showErrorToast } from "../utils/toastHelpers";
+import { ArrowLeft, Upload, Plus, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 import api from "../api/axios";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+
+const productSchema = z.object({
+  productName: z.string().min(3, "Product name must be at least 3 characters"),
+  shortDesc: z
+    .string()
+    .min(10, "Short description must be at least 10 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
+  price: z.preprocess(
+    (val) => Number(val),
+    z.number().positive("Price must be a positive number"),
+  ),
+  discountPrice: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z.number().nonnegative().optional(),
+  ),
+  stock: z.preprocess(
+    (val) => Number(val),
+    z.number().int().nonnegative("Stock must be a non-negative integer"),
+  ),
+  sku: z.string().optional(),
+  category: z.string().min(1, "Category is required"),
+  subCategory: z.string().optional(),
+  brand: z.string().optional(),
+  isFeatured: z.boolean().default(false),
+  isActive: z.boolean().default(true),
+});
 
 const AddProduct = ({ isEditMode = false }) => {
   const { id } = useParams();
@@ -12,21 +41,24 @@ const AddProduct = ({ isEditMode = false }) => {
   const [loading, setLoading] = useState(isEditMode ? true : false);
   const [submitting, setSubmitting] = useState(false);
 
-  const [productName, setProductName] = useState("");
-  const [shortDesc, setShortDesc] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [discountPrice, setDiscountPrice] = useState("");
-  const [stock, setStock] = useState("");
-  const [sku, setSku] = useState("");
-  const [category, setCategory] = useState("electronics");
-  const [subCategory, setSubCategory] = useState("");
-  const [brand, setBrand] = useState("");
   const [currentTag, setCurrentTag] = useState("");
   const [tags, setTags] = useState([]);
-  const [isFeatured, setIsFeatured] = useState(false);
-  const [isActive, setIsActive] = useState(true);
   const [images, setImages] = useState([]);
+  const [originalImages, setOriginalImages] = useState([]);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      category: "electronics",
+      isFeatured: false,
+      isActive: true,
+    },
+  });
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -34,26 +66,25 @@ const AddProduct = ({ isEditMode = false }) => {
         try {
           setLoading(true);
           const response = await api.get(`/products/${id}`);
-          const product = response.data.data || response.data;
+          const product = response.data.product;
 
-          setProductName(product.name || product.title || "");
-          setShortDesc(product.shortDescription || product.shortDesc || "");
-          setDescription(product.description || "");
-          setPrice(product.price || "");
-          setDiscountPrice(
-            product.priceAfterDiscount || product.discountPrice || "",
-          );
-          setStock(product.quantity || product.stock || "");
-          setSku(product.sku || "");
-          setCategory(product.category || "electronics");
-          setSubCategory(product.subcategory || "");
-          setBrand(product.brand || "");
+          setValue("productName", product.name || "");
+          setValue("shortDesc", product.shortDescription || "");
+          setValue("description", product.description || "");
+          setValue("price", product.price || "");
+          setValue("discountPrice", product.discountPrice || "");
+          setValue("stock", product.stock || "");
+          setValue("sku", product.sku || "");
+          setValue("category", product.category || "");
+          setValue("subCategory", product.subcategory || "");
+          setValue("brand", product.brand || "");
+          setValue("isFeatured", product.featured || false);
+          setValue("isActive", product.isActive || true);
+
           setTags(product.tags || []);
-          setIsFeatured(product.isFeatured || false);
-          setIsActive(product.isActive || true);
           setImages(product.images || []);
+          setOriginalImages(product.images || []);
         } catch (error) {
-          console.error("Error fetching product details:", error);
           showErrorToast("Failed to load product data.");
         } finally {
           setLoading(false);
@@ -61,7 +92,7 @@ const AddProduct = ({ isEditMode = false }) => {
       };
       fetchProductData();
     }
-  }, [isEditMode, id]);
+  }, [isEditMode, id, setValue]);
 
   const handleAddTag = (e) => {
     if (e) e.preventDefault();
@@ -92,19 +123,28 @@ const AddProduct = ({ isEditMode = false }) => {
     setImages(images.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     setSubmitting(true);
 
     try {
       const formData = new FormData();
-      formData.append("name", productName);
-      formData.append("shortDescription", shortDesc);
-      formData.append("description", description);
-      formData.append("price", Number(price));
-      formData.append("stock", Number(stock));
-      formData.append("category", category);
-      if (brand) formData.append("brand", brand);
+      formData.append("name", data.productName);
+      formData.append("shortDescription", data.shortDesc);
+      formData.append("description", data.description);
+      formData.append("price", data.price);
+      formData.append("stock", data.stock);
+      formData.append("category", data.category);
+      formData.append("featured", data.isFeatured);
+      formData.append("isActive", data.isActive);
+      if (data.brand) formData.append("brand", data.brand);
+      if (data.sku) formData.append("sku", data.sku);
+      if (data.subCategory) formData.append("subcategory", data.subCategory);
+      if (data.discountPrice)
+        formData.append("discountPrice", data.discountPrice);
+
+      if (tags.length > 0) {
+        tags.forEach((tag) => formData.append("tags", tag));
+      }
 
       if (images.length > 0) {
         images.forEach((img) => {
@@ -112,28 +152,32 @@ const AddProduct = ({ isEditMode = false }) => {
             formData.append("images", img.file);
           }
         });
+      }
 
-        const existingImages = images.filter((img) => !img.file);
-        if (existingImages.length > 0) {
-          formData.append("existingImages", JSON.stringify(existingImages));
-        }
+      const deletedImages = originalImages.filter(
+        (original) =>
+          !images.some((img) => img.public_id === original.public_id),
+      );
+
+      if (deletedImages.length > 0) {
+        formData.append(
+          "deletedImages",
+          JSON.stringify(deletedImages.map((img) => img.public_id)),
+        );
       }
 
       if (isEditMode) {
-        await api.put(`/products/${id}`, formData);
-        toast.success("Product updated successfully! ");
+        await api.patch(`/products/update/${id}`, formData);
+        showSuccessToast("Product updated successfully");
       } else {
         await api.post(`/products`, formData);
-        toast.success("Product created successfully! ");
+        showSuccessToast("Product created successfully");
       }
       navigate("/products");
     } catch (error) {
-      console.error("Error saving product:", error);
-      const backendErrors = error.response?.data?.errors;
-      const errorMessage = backendErrors
-        ? backendErrors.join("\n")
-        : error.response?.data?.message || "An error occurred.";
-      toast.error(errorMessage);
+      console.log(error.response.data);
+
+      showErrorToast("Error saving product");
     } finally {
       setSubmitting(false);
     }
@@ -145,7 +189,7 @@ const AddProduct = ({ isEditMode = false }) => {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="min-h-screen bg-surface-soft p-4 md:p-6 text-ink"
     >
       <div className="w-full bg-[image:var(--sef-gradient-gold-deep)] text-on-gold rounded-[2rem] p-6 md:p-8 shadow-xl flex flex-col gap-6 mb-8 border border-gold-dark/40 relative overflow-hidden">
@@ -181,7 +225,6 @@ const AddProduct = ({ isEditMode = false }) => {
                   <line x1="12" y1="22.08" x2="12" y2="12"></line>
                 </svg>
               </div>
-
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-gold-light">
                   {isEditMode ? "Modify Product" : "Create Product"}
@@ -193,14 +236,12 @@ const AddProduct = ({ isEditMode = false }) => {
                 </h1>
               </div>
             </div>
-
             <p className="text-sm text-on-gold/70 max-w-2xl leading-relaxed">
               {isEditMode
                 ? "Edit product information, update prices, adjust inventory stock, and manage galleries instantly."
                 : "Add products with validation, image previews, multi-upload support, and smooth UX."}
             </p>
           </div>
-
           <div className="bg-black/20 border border-black/10 backdrop-blur-md rounded-2xl p-4 self-stretch md:self-auto flex flex-col justify-center min-w-[200px]">
             <span className="text-[10px] text-gold-light font-bold tracking-[0.15em] uppercase">
               {isEditMode ? "STATUS" : "READY"}
@@ -252,7 +293,6 @@ const AddProduct = ({ isEditMode = false }) => {
                 ))}
               </div>
             )}
-
             <div className="border-2 border-dashed border-card-line rounded-xl p-8 text-center bg-surface-soft hover:bg-surface-fields transition-all cursor-pointer group">
               <input
                 type="file"
@@ -286,12 +326,15 @@ const AddProduct = ({ isEditMode = false }) => {
             </label>
             <input
               type="text"
-              required
               placeholder="iPhone 16 Pro"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
+              {...register("productName")}
+              className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all ${errors.productName ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
             />
+            {errors.productName && (
+              <p className="text-red-500 text-xs mt-1 font-medium">
+                {errors.productName.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -301,10 +344,14 @@ const AddProduct = ({ isEditMode = false }) => {
             <input
               type="text"
               placeholder="Must be at least 10 characters long"
-              value={shortDesc}
-              onChange={(e) => setShortDesc(e.target.value)}
-              className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
+              {...register("shortDesc")}
+              className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all ${errors.shortDesc ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
             />
+            {errors.shortDesc && (
+              <p className="text-red-500 text-xs mt-1 font-medium">
+                {errors.shortDesc.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -314,10 +361,14 @@ const AddProduct = ({ isEditMode = false }) => {
             <textarea
               rows={4}
               placeholder="Minimum 20 characters"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all resize-none"
+              {...register("description")}
+              className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all resize-none ${errors.description ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
             />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1 font-medium">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -327,12 +378,15 @@ const AddProduct = ({ isEditMode = false }) => {
               </label>
               <input
                 type="number"
-                required
                 placeholder="0.00"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
+                {...register("price")}
+                className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all ${errors.price ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
               />
+              {errors.price && (
+                <p className="text-red-500 text-xs mt-1 font-medium">
+                  {errors.price.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-ink-soft mb-2">
@@ -341,10 +395,14 @@ const AddProduct = ({ isEditMode = false }) => {
               <input
                 type="number"
                 placeholder="0.00"
-                value={discountPrice}
-                onChange={(e) => setDiscountPrice(e.target.value)}
-                className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
+                {...register("discountPrice")}
+                className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all ${errors.discountPrice ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
               />
+              {errors.discountPrice && (
+                <p className="text-red-500 text-xs mt-1 font-medium">
+                  {errors.discountPrice.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -356,10 +414,14 @@ const AddProduct = ({ isEditMode = false }) => {
               <input
                 type="number"
                 placeholder="0"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-                className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
+                {...register("stock")}
+                className={`w-full px-4 py-3 bg-card border text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all ${errors.stock ? "border-red-500 ring-2 ring-red-500/10" : "border-line"}`}
               />
+              {errors.stock && (
+                <p className="text-red-500 text-xs mt-1 font-medium">
+                  {errors.stock.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-ink-soft mb-2">
@@ -368,8 +430,7 @@ const AddProduct = ({ isEditMode = false }) => {
               <input
                 type="text"
                 placeholder="Product SKU"
-                value={sku}
-                onChange={(e) => setSku(e.target.value)}
+                {...register("sku")}
                 className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
               />
             </div>
@@ -381,8 +442,7 @@ const AddProduct = ({ isEditMode = false }) => {
                 Category
               </label>
               <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                {...register("category")}
                 className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all appearance-none cursor-pointer"
               >
                 <option value="electronics">Electronics</option>
@@ -400,8 +460,7 @@ const AddProduct = ({ isEditMode = false }) => {
               <input
                 type="text"
                 placeholder="e.g. Smartphones"
-                value={subCategory}
-                onChange={(e) => setSubCategory(e.target.value)}
+                {...register("subCategory")}
                 className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
               />
             </div>
@@ -412,8 +471,7 @@ const AddProduct = ({ isEditMode = false }) => {
               <input
                 type="text"
                 placeholder="e.g. Apple"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
+                {...register("brand")}
                 className="w-full px-4 py-3 bg-card border border-line text-ink rounded-xl text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-gold/20 focus:border-gold transition-all"
               />
             </div>
@@ -449,7 +507,6 @@ const AddProduct = ({ isEditMode = false }) => {
                     className="flex items-center gap-1 px-3 py-1 bg-surface-fields border border-line text-ink-soft text-xs font-medium rounded-full"
                   >
                     {tag}
-
                     <button
                       type="button"
                       onClick={(e) => {
@@ -470,8 +527,7 @@ const AddProduct = ({ isEditMode = false }) => {
             <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-ink-soft select-none">
               <input
                 type="checkbox"
-                checked={isFeatured}
-                onChange={(e) => setIsFeatured(e.target.checked)}
+                {...register("isFeatured")}
                 className="w-4 h-4 accent-gold border-line rounded focus:ring-gold/20 cursor-pointer"
               />
               Featured
@@ -479,8 +535,7 @@ const AddProduct = ({ isEditMode = false }) => {
             <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-ink-soft select-none">
               <input
                 type="checkbox"
-                checked={isActive}
-                onChange={(e) => setIsActive(e.target.checked)}
+                {...register("isActive")}
                 className="w-4 h-4 accent-gold border-line rounded focus:ring-gold/20 cursor-pointer"
               />
               Active

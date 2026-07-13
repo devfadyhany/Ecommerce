@@ -9,6 +9,7 @@ import Products from "../pages/Products";
 import Orders from "../pages/Orders";
 import Carts from "../pages/Carts";
 import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
 import AddProduct from "../pages/AddProduct";
   
 function AppRouter() {
@@ -37,7 +38,8 @@ function AppRouter() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/carts" element={<Carts />} />
           <Route path="/settings" element={<Settings />} />
-        </Route>  
+          <Route path="/profile" element={<Profile />} />
+        </Route>
 
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>

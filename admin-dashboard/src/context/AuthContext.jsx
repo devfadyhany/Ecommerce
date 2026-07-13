@@ -14,11 +14,23 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
+
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+  };
+
+  const refreshUser = async () => {
+    try {
+      const res = await api.get("/auth/me");
+      if (res.data.success) {
+        setUser(res.data.user);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -43,7 +55,9 @@ export const AuthProvider = ({ children }) => {
     checkCurrentUser();
   }, [token]);
   return (
-    <AuthContext.Provider value={{ token, user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, user, loading, login, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
