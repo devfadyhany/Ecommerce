@@ -11,9 +11,7 @@ import Carts from "../pages/Carts";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import AddProduct from "../pages/AddProduct";
-
-
-
+  
 function AppRouter() {
   return (
     <BrowserRouter>
