@@ -1,4 +1,3 @@
-import profile from "../../assets/profile.jpg";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -33,7 +32,7 @@ const menuItems = [
     id: 4,
     title: "Add Product",
     icon: PlusSquare,
-    path: "/add-product",
+    path: "/products/add",
   },
   {
     id: 5,
@@ -62,26 +61,24 @@ function Sidebar({ collapsed, setCollapsed }) {
     <div
       className={`${
         collapsed ? "w-20" : "w-72"
-      } fixed top-0 left-0 h-screen transition-all duration-500 bg-white border-r flex flex-col`}
+      } fixed top-0 left-0 h-screen transition-all duration-500 bg-layout border-r border-line flex flex-col`}
     >
       <div className="p-6">
-        <div className="flex items-center justify-between">
+        <div
+          className={`flex items-center ${collapsed ? "justify-center" : "justify-between"}`}
+        >
           <div
             onClick={() => setCollapsed(!collapsed)}
             className="flex items-center gap-3 cursor-pointer"
           >
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <LayoutDashboard className="text-white w-6 h-6" />
+            <div className="w-10 h-10 bg-gold rounded-xl flex items-center justify-center flex-shrink-0">
+              <LayoutDashboard className="text-on-gold w-6 h-6" />
             </div>
 
             {!collapsed && (
               <div>
-                <h1 className="text-xl font-bold dark:text-white">
-                  Admin Panel
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Commerce
-                </p>
+                <h1 className="text-xl font-bold text-ink">Admin Panel</h1>
+                <p className="text-sm text-ink-soft">Commerce</p>
               </div>
             )}
           </div>
@@ -89,9 +86,9 @@ function Sidebar({ collapsed, setCollapsed }) {
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
-              className="hidden md:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+              className="hidden md:block p-2 rounded-lg hover:bg-surface-fields transition"
             >
-              <X className="w-5 h-5 dark:text-white" />
+              <X className="w-5 h-5 text-ink" />
             </button>
           )}
         </div>
@@ -110,7 +107,9 @@ function Sidebar({ collapsed, setCollapsed }) {
                 `flex items-center ${
                   collapsed ? "justify-center" : "gap-3"
                 } p-3 rounded-lg transition ${
-                  isActive ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
+                  isActive
+                    ? "bg-gold-light text-gold-deep"
+                    : "text-ink-soft hover:bg-surface-fields"
                 }`
               }
             >
@@ -125,8 +124,10 @@ function Sidebar({ collapsed, setCollapsed }) {
       </nav>
 
       {/* Profile */}
-      <div className="p-4 border-t">
-        <div className="flex items-center gap-3">
+      <div className="p-4 border-t border-line">
+        <div
+          className={`flex items-center ${collapsed ? "justify-center" : "justify-start"} gap-3`}
+        >
           <img
             src={user?.avatar}
             alt="profile"
@@ -135,8 +136,8 @@ function Sidebar({ collapsed, setCollapsed }) {
 
           {!collapsed && (
             <div>
-              <p className="font-semibold">{user?.username}</p>
-              <p className="text-sm text-gray-500">{user?.role}</p>
+              <p className="font-semibold text-ink">{user?.username}</p>
+              <p className="text-sm text-ink-soft">{user?.role}</p>
             </div>
           )}
         </div>

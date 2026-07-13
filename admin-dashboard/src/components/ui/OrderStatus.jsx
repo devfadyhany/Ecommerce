@@ -1,3 +1,4 @@
+import React from "react";
 import api from "../../api/axios";
 
 const STATUS_META = {
@@ -31,11 +32,11 @@ const STATUS_META = {
   },
 };
 
-const OrderStatus = ({ stats }) => {
+const OrderStatus = React.memo(({ stats }) => {
   if (!stats) {
     return (
-      <div className="p-5 rounded-3xl shadow-xl border border-gray-200 bg-white">
-        <div className="animate-pulse text-slate-400 text-sm">
+      <div className="p-5 rounded-3xl shadow-xl border border-card-line bg-card">
+        <div className="animate-pulse text-ink-faint text-sm">
           Loading order stats...
         </div>
       </div>
@@ -44,13 +45,13 @@ const OrderStatus = ({ stats }) => {
 
   return (
     <>
-      <div className="p-5 rounded-3xl shadow-xl border border-gray-200 bg-white">
+      <div className="p-5 rounded-3xl shadow-xl border border-card-line bg-card">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <span className="text-sm uppercase tracking-[0.35em] text-cyan-500">
+            <span className="text-sm uppercase tracking-[0.35em] text-gold">
               OrderStatus
             </span>
-            <h3 className="mt-2 text-xl font-medium text-slate-900">
+            <h3 className="mt-2 text-xl font-medium text-ink">
               Live fulfillment breakdown
             </h3>
           </div>
@@ -66,16 +67,16 @@ const OrderStatus = ({ stats }) => {
               key={key}
               className={`p-3 sm:p-4 rounded-3xl space-y-2 sm:space-y-2.5 border opacity-70 ${style}`}
             >
-              <p className="text-md font-extralight tracking-[0.2em]">
+              <p className="text-md font-extralight tracking-[0.2em] text-ink">
                 {label}
               </p>
-              <p className="font-bold text-2xl">{stats[key] ?? 0}</p>
+              <p className="font-bold text-2xl text-ink">{stats[key] ?? 0}</p>
             </div>
           ))}
         </div>
       </div>
     </>
   );
-};
+});
 
 export default OrderStatus;

@@ -7,7 +7,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { MdOutlinePassword } from "react-icons/md";
 import { FaEnvelope } from "react-icons/fa";
 import { FiShoppingBag } from "react-icons/fi";
-import { toast } from "react-toastify";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 
 const emailRules = {
   required: "Email is required",
@@ -65,11 +65,11 @@ function Login() {
         const tokenStr = res.data.token;
 
         login(userObj, tokenStr);
-        toast.success("Login successful!");
+        showSuccessToast("Login successful");
         navigate("/dashboard");
       }
     } catch (err) {
-      alert("Failed to login: " + (err.response?.data?.message || err.message));
+      showErrorToast("Failed to login");
     } finally {
       setLoading(false);
     }
@@ -81,9 +81,9 @@ function Login() {
         <div className="flex justify-between login-container shadow-xl overflow-hidden">
           {/* Left side - info panel, hidden below lg */}
           <div className="hidden lg:flex lg:w-1/2 rounded-l-3xl px-8 py-16 d-login justify-center items-center">
-            <div className="space-y-4">
+            <div className="space-y-4 text-on-gold">
               <h2 className="text-3xl ml-2 font-bold flex items-center">
-                <FiShoppingBag /> &nbsp; Koda Commerce
+                <FiShoppingBag /> &nbsp; Elite Cart
               </h2>
               <h1 className="text-5xl font-bold leading-snug">
                 Manage Your Store Like a Pro
@@ -93,13 +93,13 @@ function Login() {
                 modern dashboard experience
               </p>
               <ul className="space-y-4 text-md">
-                <li className="w-full bg-[#fff2bc] rounded-xl p-3">
+                <li className="w-full bg-gold-light text-on-gold rounded-xl p-3">
                   ✓ Product Management
                 </li>
-                <li className="w-full bg-[#fff2bc] rounded-xl p-3">
+                <li className="w-full bg-gold-light text-on-gold rounded-xl p-3">
                   ✓ Order Tracking
                 </li>
-                <li className="w-full bg-[#fff2bc] rounded-xl p-3">
+                <li className="w-full bg-gold-light text-on-gold rounded-xl p-3">
                   ✓ Customer Insights
                 </li>
               </ul>
@@ -110,11 +110,11 @@ function Login() {
           <div className="w-full lg:w-1/2 rounded-3xl lg:rounded-l-none lg:rounded-r-3xl p-2 py-24 form-container">
             <div className="h-full flex flex-col justify-center items-center">
               <div className="flex flex-col justify-center items-center mb-8">
-                <img src="./logoo.svg" className="size-16 mb-8" />
-                <h2 className="text-3xl font-bold text-center mb-2">
+                <img src="./logo.png" className="size-16 mb-8" />
+                <h2 className="text-3xl font-bold text-center mb-2 text-ink">
                   Welcome Back
                 </h2>
-                <p>Sign in to your admin dashboard</p>
+                <p className="text-ink-soft">Sign in to your admin dashboard</p>
               </div>
 
               <form
@@ -126,22 +126,22 @@ function Login() {
                     type="text"
                     placeholder="enter your email"
                     {...register("email", emailRules)}
-                    className="rounded-md py-2 px-3 border border-gray-500 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full pl-11"
+                    className="rounded-md py-2 px-3 border border-line focus:outline-none focus:ring-1 focus:ring-gold w-full pl-11 bg-surface-fields text-ink"
                   />
-                  <p className="absolute text-xl top-[10px] left-3">
+                  <p className="absolute text-xl top-[10px] left-3 text-ink-soft">
                     <FaEnvelope />
                   </p>
                   <p
-                    className={`${
+                    className={`absolute p-to-in text-ink rounded-md transition-all duration-300 ease-out ${
                       isempty
-                        ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
-                        : "visible block text-[8px] z-10 transition-all duration-300 -top-4 left-2 p-2 rounded-md"
-                    } absolute p-to-in text-gray-800`}
+                        ? "opacity-0 -translate-y-1 pointer-events-none text-[16px] top-[6px] left-[14px] p-0"
+                        : "opacity-100 translate-y-0 text-[10px] z-10 -top-3 left-2 px-2 py-0.5"
+                    }`}
                   >
                     enter your email
                   </p>
                   {errors.email && (
-                    <p className="text-[#ff3700] text-xs mt-1">
+                    <p className="text-rose-500 text-xs mt-1">
                       {errors.email.message}
                     </p>
                   )}
@@ -150,45 +150,51 @@ function Login() {
                 <div className="relative space-y-2 mb-4">
                   <input
                     type={passwordVisible ? "text" : "password"}
+                    autoComplete="current-password"
+                    name="password"
                     placeholder="enter your password"
                     {...register("password", passwordRules)}
-                    className="rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-yellow-500 w-full border border-gray-500 pl-11"
+                    className="rounded-md py-2 px-3 focus:outline-none focus:ring-1 focus:ring-gold w-full border border-line pl-11 bg-surface-fields text-ink"
                   />
-                  <p className="absolute text-2xl top-2 left-3">
+                  <p className="absolute text-2xl top-2 left-3 text-ink-soft">
                     <MdOutlinePassword />
                   </p>
                   <p
-                    className={`${
+                    className={`absolute p-to-in text-ink rounded-md transition-all duration-300 ease-out ${
                       isempty2
-                        ? "invisible transition-all duration-300 top-[6px] left-[14px] text-[16px] p-0"
-                        : "visible block text-[8px] z-10 transition-all duration-300 -top-3 left-2 px-2 py-1 rounded-md"
-                    } absolute p-to-in text-gray-800`}
+                        ? "opacity-0 -translate-y-1 pointer-events-none text-[16px] top-[6px] left-[14px] p-0"
+                        : "opacity-100 translate-y-0 text-[10px] z-10 -top-3 left-2 px-2 py-0.5"
+                    }`}
                   >
                     enter your password
                   </p>
                   {errors.password && (
-                    <p className="text-[#ff3700] text-xs -mt-1">
+                    <p className="text-rose-500 text-xs -mt-1">
                       {errors.password.message}
                     </p>
                   )}
-                  <div className="flex items-center space-x-2 mt-2">
+                  <div className="flex items-center space-x-2 mt-2 ml-2">
                     <input
                       type="checkbox"
                       checked={passwordVisible}
                       onChange={() => setPasswordVisible(!passwordVisible)}
-                      className="rounded-full transition-all duration-200 cursor-pointer"
+                      className="rounded-full transition-all duration-200 cursor-pointer accent-gold"
                     />
-                    <p className="text-gray-800 text-[12px]">Show Password</p>
+                    <p className="text-ink-soft text-[12px]">Show Password</p>
                   </div>
                 </div>
                 <button
                   disabled={loading}
                   type="submit"
-                  className={`bg-yellow-400 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-yellow-500 transition-all duration-200 mt-4 ${
+                  className={`bg-gold font-bold text-on-gold py-2 px-4 rounded-md cursor-pointer hover:bg-gold-deep transition-all duration-200 mt-4 flex items-center justify-center gap-2 ${
                     loading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? (
+                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-on-gold border-t-transparent" />
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </form>
             </div>
