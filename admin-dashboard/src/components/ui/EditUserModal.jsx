@@ -7,18 +7,22 @@ function EditUserModal({ userId, onCancel, onSuccess }) {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
       if (!userId) return;
 
       try {
+        setSaving(true);
         const res = await api.get(`/users/${userId}`);
         setUsername(res.data.user.username);
         setPhone(res.data.user.phone);
         setAvatar(res.data.user.avatar);
       } catch (err) {
         console.error(err);
+      } finally {
+        setSaving(false);
       }
     };
     getUser();
@@ -33,6 +37,7 @@ function EditUserModal({ userId, onCancel, onSuccess }) {
       });
 
       showSuccessToast("User updated successfully!");
+      onSuccess();
     } catch (err) {
       showErrorToast("Failed to update user");
     }
@@ -92,9 +97,10 @@ function EditUserModal({ userId, onCancel, onSuccess }) {
         </div>
         <button
           onClick={handleSave}
-          className="w-full rounded-2xl bg-gold py-3.5 text-lg font-semibold text-on-gold transition hover:bg-gold-deep"
+          disabled={saving}
+          className="w-full rounded-2xl bg-gold py-3.5 text-lg font-semibold text-on-gold transition hover:bg-gold-deep disabled:opacity-60"
         >
-          Save Changes
+          {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </div>

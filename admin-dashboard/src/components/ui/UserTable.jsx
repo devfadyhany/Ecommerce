@@ -1,23 +1,44 @@
-import { User, Pencil, BadgeCheck, Trash2, X, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  User,
+  Pencil,
+  Repeat,
+  Trash2,
+  X,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
-function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, totalPages = 2, onPageChange }) {
+function UsersTable({
+  users,
+  onDelete,
+  onEdit,
+  onToggleRole,
+  currentPage = 1,
+  totalPages = 1,
+  onPageChange,
+}) {
   return (
     <div className="bg-card rounded-2xl border border-card-line shadow-md w-full mx-auto overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-card-line bg-surface-fields">
-              <th className="p-4 text-sm font-semibold">User</th>
-              <th className="p-4 text-sm font-semibold">Role</th>
-              <th className="p-4 text-sm font-semibold">Verified</th>
-              <th className="p-4 text-sm font-semibold">Actions</th>
+              <th className="p-4 text-sm font-semibold text-ink-soft">User</th>
+              <th className="p-4 text-sm font-semibold text-ink-soft">Role</th>
+              <th className="p-4 text-sm font-semibold text-ink-soft">
+                Verified
+              </th>
+              <th className="p-4 text-sm font-semibold text-ink-soft">
+                Actions
+              </th>
             </tr>
           </thead>
 
           <tbody>
             {!users || users.length === 0 ? (
               <tr>
-                <td colSpan="4" className="p-6 text-center">
+                <td colSpan="4" className="p-6 text-center text-ink-soft">
                   No users found
                 </td>
               </tr>
@@ -35,7 +56,7 @@ function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, 
                       <span className="font-semibold text-ink text-sm md:text-base">
                         {user.name}
                       </span>
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-ink-soft">
                         {user.email}
                       </span>
                     </div>
@@ -45,14 +66,15 @@ function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, 
                     <span
                       className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
                         user.role === "admin"
-                          ? " text-bage-600"
-                          : " text-gray-400"
+                          ? "bg-gold-light text-gold-deep"
+                          : "bg-surface-fields text-ink-faint"
                       }`}
                     >
                       {user.role}
                     </span>
                   </td>
 
+                  {/* Verified — display only, no endpoint to toggle it */}
                   <td className="p-4">
                     <div className="flex items-center gap-1.5 text-sm">
                       {user.isVerified ? (
@@ -73,18 +95,22 @@ function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, 
                     <div className="flex gap-2">
                       <button
                         onClick={() => onEdit(user._id || user.id)}
-                        className="p-2 bg-gray-900 hover:bg-gray-400 text-white rounded-full transition shadow-sm"
+                        className="p-2 bg-gold hover:bg-gold-deep text-on-gold rounded-full transition shadow-sm"
                         title="Edit"
                       >
                         <Pencil size={15} />
                       </button>
 
                       <button
-                        onClick={() => onToggleVerify(user._id || user.id)}
+                        onClick={() => onToggleRole(user._id || user.id)}
                         className="p-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition shadow-sm"
-                        title="Toggle Verify"
+                        title={
+                          user.role === "admin"
+                            ? "Demote to customer"
+                            : "Promote to admin"
+                        }
                       >
-                        <BadgeCheck size={15} />
+                        <Repeat size={15} />
                       </button>
 
                       <button
@@ -110,7 +136,6 @@ function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, 
         </div>
 
         <div className="flex items-center gap-2">
-
           <button
             onClick={() => onPageChange && onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -119,27 +144,19 @@ function UsersTable({ users, onDelete, onEdit, onToggleVerify, currentPage = 1, 
             <ChevronLeft size={16} />
           </button>
 
-          <button
-            onClick={() => onPageChange && onPageChange(1)}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              currentPage === 1
-                ? "bg-slate-900 text-white" 
-                : "border border-card-line text-ink-soft hover:bg-surface-fields"
-            }`}
-          >
-            1
-          </button>
-
-          <button
-            onClick={() => onPageChange && onPageChange(2)}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition ${
-              currentPage === 2
-                ? "bg-slate-900 text-white"
-                : "border border-card-line text-ink-soft hover:bg-surface-fields"
-            }`}
-          >
-            2
-          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => onPageChange && onPageChange(page)}
+              className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                currentPage === page
+                  ? "bg-gold text-on-gold"
+                  : "border border-card-line text-ink-soft hover:bg-surface-fields"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
 
           <button
             onClick={() => onPageChange && onPageChange(currentPage + 1)}
