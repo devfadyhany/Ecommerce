@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router";
 import { FiBell, FiMoon, FiLogOut, FiSun } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
+import logo from "../../assets/logo.png";
+import logoDark from "../../assets/logo-dark.png";
 
 const Navbar = ({ collapsed }) => {
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ const Navbar = ({ collapsed }) => {
     >
       <div className="flex items-center gap-3">
         <img
-          src={`${theme === "dark" ? "./logo-dark.png" : "./logo.png"}`}
+          src={`${theme === "dark" ? logoDark : logo}`}
           alt="Logo"
           className="size-12"
         />
