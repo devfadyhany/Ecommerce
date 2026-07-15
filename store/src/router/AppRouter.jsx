@@ -29,9 +29,9 @@ function AppRouter() {
 
         <Route
           element={
-            // <ProtectedRoute>
-            <StoreLayout />
-            // </ProtectedRoute>
+            <ProtectedRoute>
+              <StoreLayout />
+            </ProtectedRoute>
           }
         >
           <Route path="/orders" element={<Orders />} />
