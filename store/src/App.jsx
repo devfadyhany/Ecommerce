@@ -1,7 +1,30 @@
+import { ToastContainer } from "react-toastify";
+import { DropFromTop } from "./utils/toastTransition";
+
+import { useTheme } from "./context/ThemeContext";
+import AppRouter from "./router/AppRouter";
+
 function App() {
+  const { theme } = useTheme();
+
   return (
     <>
-      <h1 className="text-4xl font-bold text-blue-600">Store</h1>
+      <AppRouter />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        closeButton={false}
+        theme={theme === "dark" ? "dark" : "light"}
+        transition={DropFromTop}
+        toastClassName="!rounded-2xl !border !border-card-line !shadow-lg !p-3 !min-h-0"
+        bodyClassName="!p-0 !text-sm !font-medium"
+      />
     </>
   );
 }
