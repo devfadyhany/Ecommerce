@@ -1,14 +1,32 @@
+import api from "../api/axios";
 import { useEffect, useState } from "react";
 import OrderCard from "../components/orders/OrderCard";
 
 function Orders() {
+  console.log("Orders component rendered");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    ///////// API /////////
-  }, []);
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await api.get("/orders/my");
+
+      setOrders(response.data.orders);
+    } catch (error) {
+      setError("Failed to load orders.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchOrders();
+}, []);
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -39,7 +57,7 @@ function Orders() {
       ) : (
         orders.map((order) => (
           <OrderCard
-            key={order.id}
+            key={order._id}
             order={order}
           />
         ))
