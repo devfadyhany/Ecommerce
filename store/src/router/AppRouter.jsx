@@ -10,7 +10,6 @@ import Orders from "../pages/Orders";
 import Wishlist from "../pages/Wishlist";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
-
 function AppRouter() {
   return (
     <BrowserRouter>
@@ -45,5 +44,4 @@ function AppRouter() {
     </BrowserRouter>
   );
 }
-
 export default AppRouter;
