@@ -8,10 +8,10 @@ import {
 } from "../utils/toastHelpers";
 import api from "../api/axios";
 
-import ImageGallery from "./ImageGallery";
-import ProductInfo from "./ProductInfo";
-import ProductTabs from "./ProductTabs";
-import RelatedProducts from "./RelatedProducts";
+import ImageGallery from "../components/ui/ImageGallery";
+import ProductInfo from "../components/ui/ProductInfo";
+import ProductTabs from "../components/ui/ProductTabs";
+import RelatedProducts from "../components/ui/RelatedProducts";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -43,6 +43,8 @@ const ProductDetails = () => {
         } else {
           fetchedProduct = response.data;
         }
+
+        console.log(response.data);
 
         setProduct(fetchedProduct);
         setError("");
