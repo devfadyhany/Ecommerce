@@ -10,6 +10,7 @@ import Orders from "../pages/Orders";
 import Wishlist from "../pages/Wishlist";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
+import OrderDetails from "../pages/OrderDetails";
 
 function AppRouter() {
   return (
@@ -34,7 +35,10 @@ function AppRouter() {
             </ProtectedRoute>
           }
         >
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders">
+            <Route index element={<Orders />} />
+            <Route path=":id" element={<OrderDetails />} />
+          </Route>
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />

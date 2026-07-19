@@ -1,228 +1,299 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import api from '../api/axios';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import {
+  showSuccessToast,
+  showErrorToast,
+  showWarningToast,
+  showInfoToast,
+} from "../utils/toastHelpers";
+import api from "../api/axios";
 
-export default function ProductDetails() {
+import ImageGallery from "../components/ui/ImageGallery";
+import ProductInfo from "../components/ui/ProductInfo";
+import ProductTabs from "../components/ui/ProductTabs";
+import RelatedProducts from "../components/ui/RelatedProducts";
+
+const ProductDetails = () => {
   const { id } = useParams();
-  const [order, setOrder] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [cancelling, setCancelling] = useState(false);
-
-  const steps = ["pending", "confirmed", "processing", "shipped", "delivered"];
-
-  const getOrderDetails = async () => {
-    try {
-      setLoading(true);
-      const res = await api.get(`/orders/my/${id}`)
-      
-      if (res.data.success) {
-        setOrder(res.data.order);
-      }
-    } catch (err) {
-      console.error("Failed to fetch order details:", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [error, setError] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState("description");
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistedIds, setWishlistedIds] = useState([]);
+  const isLoggedIn = !!localStorage.getItem("token");
+  const [isAddingMainToCart, setIsAddingMainToCart] = useState(false);
+  const [addingRelatedId, setAddingRelatedId] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
-    getOrderDetails();
+    const fetchProductData = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(`/products/${id}`);
+
+        let fetchedProduct = null;
+        if (response.data && response.data.product) {
+          fetchedProduct = response.data.product;
+        } else {
+          fetchedProduct = response.data;
+        }
+
+        console.log(response.data);
+
+        setProduct(fetchedProduct);
+        setError("");
+
+        if (fetchedProduct && fetchedProduct.category) {
+          // eslint-disable-next-line react-hooks/immutability
+          fetchRelatedProducts(
+            fetchedProduct.category,
+            fetchedProduct._id || fetchedProduct.id,
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError("Failed to load product details.");
+        showErrorToast("Error fetching product details!");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProductData();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQuantity(1);
+      setCurrentImageIndex(0);
+    }
   }, [id]);
 
-  const handleCancel = async () => {
-    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+  const fetchRelatedProducts = async (categoryName, currentProductId) => {
     try {
-      setCancelling(true);
-      const res = await api.patch(`/orders/my/${id}/cancel`);
-      if (res.data.success) {
-        await getOrderDetails();
-      }
+      const response = await api.get(`/products?category=${categoryName}`);
+      const allProducts = response.data.products || response.data || [];
+
+      const filtered = allProducts.filter(
+        (item) => (item._id || item.id) !== currentProductId,
+      );
+
+      setRelatedProducts(filtered.slice(0, 4));
     } catch (err) {
-      console.error("Failed to cancel order:", err);
-      alert("Could not cancel the order. Please try again.");
-    } finally {
-      setCancelling(false);
+      console.error("Error fetching related products:", err);
     }
   };
 
-  if (loading) return <div className="text-center p-10 text-ink font-medium">LOADING...</div>;
-  if (error) return <div className="text-center p-10 text-red-500 font-medium">ERROR</div>;
-  if (!order) return <div className="text-center p-10 text-ink font-medium">Order not found</div>;
+  const handleDeleteReview = async (reviewId, index) => {
+    try {
+      if (reviewId) {
+        await api.delete(`/products/${id}/reviews/${reviewId}`);
+      }
 
-  const currentIdx = steps.indexOf(order.status);
-  const canCancel = order.status === "pending" || order.status === "confirmed";
+      setProduct((prev) => ({
+        ...prev,
+        reviews: prev.reviews.filter((_, idx) => idx !== index),
+      }));
+      showSuccessToast("Review deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting review:", err);
+      showErrorToast("Failed to delete review.");
+    }
+  };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 bg-surface min-h-screen text-ink">
-      <div className="pb-6 mb-8 border-b border-line">
-        <h1 className="text-3xl font-bold text-ink mb-2">Order #{order._id}</h1>
-        <p className="text-sm text-ink-soft">
-          Placed on {new Date(order.createdAt).toLocaleDateString()}
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? (product?.images?.length || 1) - 1 : prev - 1,
+    );
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) =>
+      prev === (product?.images?.length || 1) - 1 ? 0 : prev + 1,
+    );
+  };
+
+  const handleQuantityChange = (type) => {
+    if (type === "increase") {
+      if (quantity < product.stock) setQuantity((prev) => prev + 1);
+      else
+        showWarningToast(
+          `Sorry, only ${product.stock} items available in stock.`,
+        );
+    } else {
+      if (quantity > 1) setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingMainToCart(true);
+      await api.post("/carts/items", { productId: id, quantity });
+      showSuccessToast("Added to cart successfully! ");
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      showErrorToast("Failed to add to cart. Please check your login status.");
+    } finally {
+      setIsAddingMainToCart(false);
+    }
+  };
+
+  const handleAddRelatedToCart = async (productId) => {
+    try {
+      setAddingRelatedId(productId);
+      await api.post("/carts/items", { productId, quantity: 1 });
+      showSuccessToast("Added to cart successfully! ");
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      showErrorToast("Failed to add to cart.");
+    } finally {
+      setAddingRelatedId(null);
+    }
+  };
+
+  const handleToggleWishlist = async () => {
+    try {
+      if (!isWishlisted) {
+        await api.post(`/wishlists/add/${id}`);
+        setIsWishlisted(true);
+        showSuccessToast("Added to wishlist. ");
+      } else {
+        await api.delete(`/wishlists/remove/${id}`);
+        setIsWishlisted(false);
+        showInfoToast("Removed from wishlist.");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      showErrorToast("Please login first to manage your wishlist.");
+    }
+  };
+
+  const handleToggleRelatedWishlist = async (productId) => {
+    try {
+      const isAlreadyAdded = wishlistedIds.includes(productId);
+      if (!isAlreadyAdded) {
+        await api.post(`/wishlists/add/${productId}`);
+        setWishlistedIds((prev) => [...prev, productId]);
+        showSuccessToast("Added to wishlist.");
+      } else {
+        await api.delete(`/wishlists/remove/${productId}`);
+        setWishlistedIds((prev) => prev.filter((favId) => favId !== productId));
+        showInfoToast("Removed from wishlist.");
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      showErrorToast("Please login first to manage your wishlist.");
+    }
+  };
+
+  const handleAddReview = async (e) => {
+    e.preventDefault();
+    if (!reviewComment.trim()) {
+      showWarningToast("Please write your review comment.");
+      return;
+    }
+    try {
+      setSubmittingReview(true);
+      const response = await api.post(`/products/${id}/reviews`, {
+        rating,
+        comment: reviewComment,
+      });
+      showSuccessToast("Review submitted successfully ⭐");
+
+      const newReview = response.data.review || {
+        rating,
+        comment: reviewComment,
+        createdAt: new Date(),
+      };
+      setProduct((prev) => ({
+        ...prev,
+        reviews: [...prev.reviews, newReview],
+      }));
+      setReviewComment("");
+      // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      showErrorToast(
+        "Failed to add review. Only registered buyers can leave reviews.",
+      );
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-surface">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-surface">
+        <p className="text-red-500 font-semibold">
+          {error || "Product not found."}
         </p>
       </div>
+    );
+  }
 
+  const { title, name, description, images = [], reviews = [] } = product;
+  const displayTitle = title || name;
 
-      <div className="mb-12 bg-surface-soft p-6 rounded-xl shadow-md border border-line">
-        <div className="flex items-center justify-between relative">
-          {steps.map((step, idx) => {
-            const isCompleted = idx <= currentIdx;
-            return (
-              <div key={step} className="flex flex-col items-center flex-1 relative z-10">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
-                  isCompleted ? "bg-gold text-on-gold" : "bg-surface-fields text-ink-faint border border-line"
-                }`}>
-                  {idx + 1}
-                </div>
-                <span className={`text-xs mt-2 capitalize font-medium ${
-                  isCompleted ? "text-gold font-semibold" : "text-ink-faint"
-                }`}>
-                  {step}
-                </span>
-              </div>
-            );
-          })}
-          <div className="absolute top-4 left-0 right-0 h-1 bg-surface-fields -z-10" />
-          <div 
-            className="absolute top-4 left-0 h-1 bg-gold transition-all duration-300 -z-10" 
-            style={{ width: `${(currentIdx / (steps.length - 1)) * 100}%` }}
+  return (
+    <div className="w-full bg-surface text-ink min-h-screen transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 py-8 mt-16 font-sans">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+          <ImageGallery
+            images={images}
+            displayTitle={displayTitle}
+            currentImageIndex={currentImageIndex}
+            setCurrentImageIndex={setCurrentImageIndex}
+            handlePrevImage={handlePrevImage}
+            handleNextImage={handleNextImage}
+          />
+
+          <ProductInfo
+            product={product}
+            quantity={quantity}
+            handleQuantityChange={handleQuantityChange}
+            handleAddToCart={handleAddToCart}
+            isAddingMainToCart={isAddingMainToCart}
+            handleToggleWishlist={handleToggleWishlist}
+            isWishlisted={isWishlisted}
           />
         </div>
-      </div>
 
+        <ProductTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          description={description}
+          reviews={reviews}
+          isLoggedIn={isLoggedIn}
+          rating={rating}
+          setRating={setRating}
+          reviewComment={reviewComment}
+          setReviewComment={setReviewComment}
+          handleAddReview={handleAddReview}
+          submittingReview={submittingReview}
+          handleDeleteReview={handleDeleteReview}
+        />
 
-
-
-
-
-
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
-        <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
-          <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-seam">Items</h2>
-          <div className="space-y-4">
-            {order.items.map((item) => (
-              <div key={item.product} className="flex justify-between items-center py-2 border-b border-seam last:border-0">
-                <div>
-                  <p className="font-semibold text-ink">{item.name}</p>
-                </div>
-                <span className="font-bold text-gold">{item.price * item.quantity} EGP</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div className="space-y-6">
-
-          <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
-            <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-seam">Shipping & Payment</h2>
-            <div className="text-sm space-y-2 text-ink-soft">
-              <p className="font-semibold text-ink">{order.shippingAddress.fullName}</p>
-              <p>{order.shippingAddress.address}, {order.shippingAddress.city}</p>
-              <p>{order.shippingAddress.country}, {order.shippingAddress.postalCode}</p>
-              <p className="pt-2">Phone: {order.shippingAddress.phone}</p>
-              <p className="pt-2 border-t border-seam">
-                Payment Method: <span className="font-medium capitalize text-ink">{order.paymentMethod}</span>
-              </p>
-            </div>
-          </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <div className="rounded-xl p-6 bg-surface-soft border border-line shadow-md">
-            <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-line">Summary</h2>
-            <div className="space-y-2 text-sm text-ink-soft">
-              <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span className="text-ink">{order.subtotal} EGP</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping Fee:</span>
-                <span className="text-ink">{order.shippingFee} EGP</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax:</span>
-                <span className="text-ink">{order.tax} EGP</span>
-              </div>
-
-
-
-
-              {order.discount > 0 && (
-                <div className="flex justify-between text-red-500 font-medium">
-                  <span>Discount:</span>
-                  <span>-{order.discount} EGP</span>
-                </div>
-              )}
-
-
-              
-              <div className="flex justify-between font-bold text-lg text-ink pt-2 border-t border-line">
-                <span>Total Price:</span>
-                <span className="text-gold">{order.totalPrice} EGP</span>
-              </div>
-            </div>
-
-
-
-
-
-            {canCancel && (
-              <button
-                onClick={handleCancel}
-                disabled={cancelling}
-                className="w-full mt-6 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {cancelling ? "Cancelling..." : "Cancel Order"}
-              </button>
-            )}
-          </div>
-
-
-
-
-
-          {order.customerNote && (
-            <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
-              <h2 className="text-sm font-bold text-ink mb-2"> Customer Note:</h2>
-              <p className="text-sm text-ink-soft italic">{order.customerNote}</p>
-            </div>
-          )}
-        </div>
+        <RelatedProducts
+          relatedProducts={relatedProducts}
+          wishlistedIds={wishlistedIds}
+          addingRelatedId={addingRelatedId}
+          onToggleWishlist={handleToggleRelatedWishlist}
+          onAddToCart={handleAddRelatedToCart}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default ProductDetails;
