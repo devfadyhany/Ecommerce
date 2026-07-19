@@ -47,7 +47,7 @@ if (!user) {
   return <p>Loading...</p>;
 }
   return(
-    <div className="p-6 space-y-8 max-w-6xl mx-auto">
+    <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <h2 className="text-ink font-bold text-3xl">My Profile</h2>
       {isEditing ? <EditProfileForm user = {user}  loading={loading}  onSave = {onSave} onCancel = {onCancel} /> : <ProfileInfo user = {user}  onEdit = {() => setIsEditing(true)}/>}
         <AddressForm  user={user} refreshUser={refreshUser} />
