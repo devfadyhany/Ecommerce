@@ -51,6 +51,9 @@
   --toastify-toast-shadow: var(--sef-card-shadow);
   --toastify-toast-min-height: 44px;
   --toastify-toast-width: fit-content !important;
+
+  --sef-danger-bg:#fef2f2;
+  --sef-danger-text:#ef4444;
 }
 
 .dark {
@@ -93,6 +96,9 @@
   --sef-gradient-gold-subtle: linear-gradient(135deg, #1e1a16 0%, #3a3020 100%);
   --sef-gradient-card-hover: linear-gradient(180deg, #1e1a16 0%, #262119 100%);
   --sef-gradient-sidebar: linear-gradient(180deg, #17140f 0%, #1a1611 100%);
+
+  --sef-danger-bg:#3a1f1f;
+  --sef-danger-text:#f87171;
 }
 
 @theme {
@@ -122,6 +128,10 @@
   --color-gold-soft: var(--sef-gold-secondary);
   --color-gold-light: var(--sef-gold-light);
   --color-gold-deep: var(--sef-gold-dark);
+
+  /* Danger */
+  --color-danger-bg: var(--sef-danger-bg);
+  --color-danger-text: var(--sef-danger-text);
 }
 
 * {
