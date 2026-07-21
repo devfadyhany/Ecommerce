@@ -29,4 +29,5 @@ function Getwishlist() {
   return { dataWishlist, loading, error };
 }
 
+
 export default Getwishlist;
