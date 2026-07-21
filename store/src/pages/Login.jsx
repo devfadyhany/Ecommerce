@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-
+import { Navigate, useNavigate , Link } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
+import { CiMail, CiLock } from "react-icons/ci";
+import AuthInput from "../components/ui/auth/AuthInput";
+import AuthLayout from "../components/layout/AuthLayout";
+import AuthButton from "../components/ui/auth/AuthButton";
+import AuthLink from "../components/ui/auth/AuthLink";
 
 function Login() {
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
 
   if (token) {
     return <Navigate to="/" replace />;
@@ -24,6 +27,16 @@ function Login() {
     e.preventDefault();
 
     try {
+      if (!email.trim() || !password) {
+        showErrorToast("Please fill in all fields");
+        return;
+      }
+
+      if (password.length < 8 || password.length > 30) {
+        showErrorToast("Password must be between 8 and 30 characters");
+        return;
+      }
+
       setLoading(true);
       const res = await api.post("/auth/login", {
         email,
@@ -39,49 +52,57 @@ function Login() {
         navigate("/");
       }
     } catch (err) {
-      showErrorToast("Failed to login");
+      showErrorToast(err.response?.data?.message || "Failed to login");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
+
+    <AuthLayout
+      title="Welcome Back"
+      subtitle="Sign in to your account"
+    >
       <form
-        className="mx-auto flex flex-col w-[80%] shadow-4xl space-y-2"
+        className="form-container mx-auto flex flex-col space-y-4 py-6 px-8 shadow-surface-fields shadow-2xl rounded-lg"
         onSubmit={handleLogin}
       >
-        <input
+        <AuthInput
+          label="Email"
+          icon={<CiMail />}
           type="email"
-          className="rounded-md py-2 px-3 border border-line focus:outline-none focus:ring-1 focus:ring-gold w-full bg-surface-fields text-ink"
-          placeholder="enter your email..."
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          value={email}
+          required
+          placeholder="you@example.com"
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-          type="text"
-          className="rounded-md py-2 px-3 border border-line focus:outline-none focus:ring-1 focus:ring-gold w-full bg-surface-fields text-ink"
-          placeholder="enter your password..."
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
+        <AuthInput
+          label="Password"
+          icon={<CiLock />}
+          type="password"
+          value={password}
+          required
+          minLength={8}
+          maxLength={30}
+          placeholder="••••••••"
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <button
-          disabled={loading}
-          className={`bg-gold font-bold text-on-gold py-2 px-4 rounded-md cursor-pointer hover:bg-gold-deep transition-all duration-200 mt-4 flex items-center justify-center gap-2 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          type="submit"
-        >
-          {loading ? (
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-on-gold border-t-transparent" />
-          ) : (
-            "Login"
-          )}
-        </button>
+        <Link to="/forgot-password"
+          className="text-gold text-decoration-none hover:underline hover:text-gold-deep ml-1">
+          Forgot Password?
+        </Link>
+        <AuthButton 
+            text="Login" 
+            loading={loading}
+          />
+          <AuthLink
+            text="Don't have an account?"
+            linkText="Register"
+            to="/register"
+          />
       </form>
-    </>
+    </AuthLayout>
   );
 }
 

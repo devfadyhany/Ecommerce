@@ -3,6 +3,9 @@ import Home from "../pages/Home";
 import Shop from "../pages/Shop";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import VerifyOTP from "../pages/VerifyOTP";
+import ForgotPassword from "../pages/ForgotPassword";
+import ForgotPW_VerifyOTP from "../pages/ForgotPW_VerifyOTP";
 import ProductDetails from "../pages/ProductDetails";
 import StoreLayout from "../components/layout/StoreLayout";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
@@ -22,6 +25,9 @@ function AppRouter() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/forgot-password/verify-otp" element={<ForgotPW_VerifyOTP />} />
 
           <Route path="/products">
             <Route path=":id" element={<ProductDetails />} />
