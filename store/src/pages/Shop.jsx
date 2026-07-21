@@ -39,8 +39,8 @@ function Shop() {
   } = useProducts();
 
   return (
-    <div className="w-full bg-surface text-ink min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-8 mt-16">
+    <div className="w-full text-ink min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center gap-2 sm:gap-3 mb-6">
           <SearchInput
             value={searchTerm}
