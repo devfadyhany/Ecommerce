@@ -168,3 +168,50 @@ button {
 }
 
 /* ///////////////////////////// Components Styles ////////////////////////////// */
+/* /////////////////// Auth Styles ///////////////// */
+/* Remove the default password eye from the browsers */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+/* Form Animation */
+.form-container {
+  background:
+    linear-gradient(var(--color-card), var(--color-card)) padding-box,
+    linear-gradient(
+      135deg,
+      var(--color-gold-deep),
+      var(--color-gold),
+      var(--color-gold-light),
+      var(--color-gold),
+      var(--color-gold-deep)
+    ) border-box;
+  
+  border: 2px solid transparent;
+  border-radius: 16px;
+
+  background-size: 300% 300%;
+  animation: goldBorder 8s ease infinite;
+}
+
+@keyframes goldBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/* ///////////////////////////////////////////////////////////////////////// */

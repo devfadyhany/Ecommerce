@@ -1,5 +1,5 @@
-import samsung from "../assets/logo.png";
-import iphone from "../assets/logo.png";
+// import samsung from "../assets/images/samsung.png";
+// import iphone from "../assets/images/iphone.png";
 import { useState } from "react";
 const data = [
   {
@@ -7,14 +7,14 @@ const data = [
     name: "Samsung Galaxy S25 U",
     price: 6000,
     quantity: 1,
-    image: samsung,
+    // image: samsung,
   },
   {
     id: 2,
     name: "iPhone 13",
     price: 86700,
     quantity: 1,
-    image: iphone,
+    // image: iphone,
   },
 
 ];
