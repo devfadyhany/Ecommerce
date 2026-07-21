@@ -1,5 +1,5 @@
-import samsung from "../assets/images/samsung.png";
-import iphone from "../assets/images/iphone.png";
+import samsung from "../assets/logo.png";
+import iphone from "../assets/logo.png";
 import { useState } from "react";
 const data = [
   {
