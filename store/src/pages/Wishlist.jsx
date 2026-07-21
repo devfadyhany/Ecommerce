@@ -11,16 +11,16 @@ function Wishlist() {
   if (error) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-[var(--sef-bg-primary)]">
-        <p className="text-[var(--sef-text-primary)] font-medium">error fetch data</p>
+        <p className="text-[var(--sef-text-primary)] font-medium text-4xl">error fetch data</p>
       </div>
     );
   }
 
   return (
-    // 💡 تم استبدال bg-gray-100 بخلفية متجرك المخصصة var(--sef-bg-primary)
+    
     <div className="min-h-screen w-full bg-[var(--sef-bg-primary)] p-4">
       
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         
        
         {loading && 
@@ -52,7 +52,7 @@ function Wishlist() {
       
       {!loading && (!dataWishlist || dataWishlist.length === 0) && (
         <div className="text-center py-12">
-          <p className="text-[var(--sef-text-secondary)] font-medium text-lg">wishlist is free</p>
+          <p className="text-[var(--sef-text-secondary)] font-medium text-4xl">wishlist is free</p>
         </div>
       )}
 

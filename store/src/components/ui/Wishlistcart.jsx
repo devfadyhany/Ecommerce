@@ -9,7 +9,6 @@ function Wishlistcart({img,title,description,prise,discountPrice,id}) {
 
    const addcart =async (id)=>{
     try{
-       console.log(id)
       const res = await api.post(`/wishlists/add/${id}`);
      await showSuccessToast("Success add cart")
           
@@ -20,7 +19,7 @@ function Wishlistcart({img,title,description,prise,discountPrice,id}) {
 
  const delcart = async  (id)=>{
   try{
-       console.log(id)
+    
       const res = await api.post(`/wishlists/remove/${id}`);
      await showSuccessToast("Success delete cart")
           
@@ -29,14 +28,6 @@ function Wishlistcart({img,title,description,prise,discountPrice,id}) {
     }
    }
  
-
-
-
-
-
-
-
-
 
   return (
      <div className="w-full max-w-sm overflow-hidden rounded-b-2xl border transition-all duration-300 bg-[var(--sef-card-bg)] border-[var(--sef-card-border)] shadow-[var(--sef-card-shadow)] hover:shadow-[var(--sef-card-hover-shadow)] hover:bg-[var(--sef-gradient-card-hover)] group">
@@ -61,7 +52,7 @@ function Wishlistcart({img,title,description,prise,discountPrice,id}) {
           </p>
         </div>
 
-        {/* الأسعار */}
+        
         <div className="flex items-baseline space-x-5 ">
           <span className="text-xl font-extrabold text-[var(--sef-gold-primary)]">
             EGP {discountPrice}
