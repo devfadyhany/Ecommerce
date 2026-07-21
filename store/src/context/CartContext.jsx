@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/axios";
 
@@ -11,9 +10,9 @@ export function CartProvider({ children }) {
     try {
       setLoading(true);
 
- const res = await api.get("/carts");
-     if (res.data.success) {
-    setCart(res.data);
+      const res = await api.get("/carts");
+      if (res.data.success) {
+        setCart(res.data);
       }
     } catch (err) {
       console.error(err);
@@ -49,7 +48,7 @@ export function CartProvider({ children }) {
   };
   const removeFromCart = async (productId) => {
     try {
-     await api.delete(`/carts/items/${productId}`);
+      await api.delete(`/carts/items/${productId}`);
       getCart();
     } catch (err) {
       console.error(err);
@@ -65,45 +64,45 @@ export function CartProvider({ children }) {
     }
   };
   const applyCoupon = async (code) => {
-  try {
-    await api.post("/carts/coupon", {
-      code,
-    });
-    getCart();
-  } catch (err) {
-    console.error(err);
-  }
-};
-const removeCoupon = async () => {
-  try {
-    await api.delete("/carts/coupon");
-    getCart();
-  } catch (err) {
-    console.error(err);
-  }
-};
+    try {
+      await api.post("/carts/coupon", {
+        code,
+      });
+      getCart();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const removeCoupon = async () => {
+    try {
+      await api.delete("/carts/coupon");
+      getCart();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     getCart();
   }, []);
 
   return (
-   <CartContext.Provider
-  value={{
-    cart,
-    setCart,
-    loading,
-    setLoading,
-    getCart,
-    addToCart,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-    applyCoupon,
-    removeCoupon,
-  }}
->
-   {children}
+    <CartContext.Provider
+      value={{
+        cart,
+        setCart,
+        loading,
+        setLoading,
+        getCart,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        applyCoupon,
+        removeCoupon,
+      }}
+    >
+      {children}
     </CartContext.Provider>
   );
 }
