@@ -22,8 +22,6 @@ const Navbar = () => {
   const { user } = useAuth();
   const { cart } = useCart();
 
-  console.log(user);
-
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
