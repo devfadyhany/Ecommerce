@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 import ProfileInfo from "../components/layout/ui/ProfileInfo";
 import EditProfileForm from "../components/layout/ui/EditProfileForm";
 import AddressForm from "../components/layout/ui/AddressForm";
@@ -18,44 +18,51 @@ function Profile() {
     logout();
     navigate("/login");
   };
-  const [isEditing, setIsEditing] = useState(false)
-  
+  const [isEditing, setIsEditing] = useState(false);
+
   const { user, refreshUser } = useAuth();
   const onSave = async (updatedUser) => {
     setLoading(true);
-  try{
-    const res = await api.patch(`/users/${user._id}`, updatedUser);
-    if (res.data.success) {
-      await refreshUser();
-      showSuccessToast(res.data.message || "Profile updated successfully.");
-      setIsEditing(false);
+    try {
+      const res = await api.patch(`/users/${user._id}`, updatedUser);
+      if (res.data.success) {
+        await refreshUser();
+        showSuccessToast(res.data.message || "Profile updated successfully.");
+        setIsEditing(false);
+      }
+    } catch (error) {
+      showErrorToast(
+        error.response?.data?.message || "Failed to update profile.",
+      );
+    } finally {
+      setLoading(false);
     }
-  }catch(error){
-    showErrorToast(
-      error.response?.data?.message || "Failed to update profile."
-    );
-  }finally{
-    setLoading(false);
+  };
+
+  const onCancel = () => {
+    setIsEditing(false);
+  };
+  if (!user) {
+    return <p>Loading...</p>;
   }
-
-};
-
-const onCancel = () => {
-  setIsEditing(false);
-};
-if (!user) {
-  return <p>Loading...</p>;
-}
-  return(
+  return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <h2 className="text-ink font-bold text-3xl">My Profile</h2>
-      {isEditing ? <EditProfileForm user = {user}  loading={loading}  onSave = {onSave} onCancel = {onCancel} /> : <ProfileInfo user = {user}  onEdit = {() => setIsEditing(true)}/>}
-        <AddressForm  user={user} refreshUser={refreshUser} />
-        <ChangePasswordCard />
-        <LogoutButton onLogout={handleLogout} />
+      {isEditing ? (
+        <EditProfileForm
+          user={user}
+          loading={loading}
+          onSave={onSave}
+          onCancel={onCancel}
+        />
+      ) : (
+        <ProfileInfo user={user} onEdit={() => setIsEditing(true)} />
+      )}
+      <AddressForm user={user} refreshUser={refreshUser} />
+      <ChangePasswordCard />
+      <LogoutButton onLogout={handleLogout} />
     </div>
-  )
-  
+  );
 }
 
 export default Profile;

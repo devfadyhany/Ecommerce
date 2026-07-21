@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate , Link } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
@@ -59,11 +59,7 @@ function Login() {
   };
 
   return (
-
-    <AuthLayout
-      title="Welcome Back"
-      subtitle="Sign in to your account"
-    >
+    <AuthLayout title="Welcome Back" subtitle="Sign in to your account">
       <form
         className="form-container mx-auto flex flex-col space-y-4 py-6 px-8 shadow-surface-fields shadow-2xl rounded-lg"
         onSubmit={handleLogin}
@@ -88,19 +84,18 @@ function Login() {
           placeholder="••••••••"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Link to="/forgot-password"
-          className="text-gold text-decoration-none hover:underline hover:text-gold-deep ml-1">
+        <Link
+          to="/forgot-password"
+          className="text-gold text-decoration-none hover:underline hover:text-gold-deep ml-1"
+        >
           Forgot Password?
         </Link>
-        <AuthButton 
-            text="Login" 
-            loading={loading}
-          />
-          <AuthLink
-            text="Don't have an account?"
-            linkText="Register"
-            to="/register"
-          />
+        <AuthButton text="Login" loading={loading} />
+        <AuthLink
+          text="Don't have an account?"
+          linkText="Register"
+          to="/register"
+        />
       </form>
     </AuthLayout>
   );
