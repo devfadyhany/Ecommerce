@@ -30,7 +30,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="w-full bg-layout border-b border-card-line shadow-sm relative">
+    <nav className="w-full bg-layout border-b border-card-line shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2">
           <img src={theme == "dark" ? LogoDark : Logo} className="size-12" />
