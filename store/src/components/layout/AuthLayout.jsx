@@ -10,7 +10,7 @@ function AuthLayout({ title, subtitle, children }) {
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
-    <div className="py-8 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+    <div className="mt-16 py-8 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
       <div className="text-center w-full max-w-md">
         <h1 className="text-3xl flex items-center justify-center gap-1 font-bold mb-4 text-center text-ink">
           <img
