@@ -1,32 +1,42 @@
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 function OrderCard({ order }) {
+  const navigate = useNavigate();
+
   const handleViewDetails = () => {
-     ///////Navigate to "Order Details" page
+    navigate(`/orders/${order._id}`);
   };
+
   const getStatusStyle = (status) => {
-  if (status?.toLowerCase() === "confirmed") {
-    return "bg-green-100 text-green-700";
-  }
+    if (status?.toLowerCase() === "confirmed") {
+      return "bg-green-100 text-green-700";
+    }
 
-  if (status?.toLowerCase() === "pending") {
-    return "bg-yellow-100 text-yellow-700";
-  }
+    if (status?.toLowerCase() === "pending") {
+      return "bg-yellow-100 text-yellow-700";
+    }
 
-  if (status?.toLowerCase() === "cancelled") {
-    return "bg-red-100 text-red-700";
-  }
+    if (status?.toLowerCase() === "cancelled") {
+      return "bg-red-100 text-red-700";
+    }
 
-  return "bg-surface-soft text-ink-soft";
+    return "bg-surface-soft text-ink-soft";
   };
 
   return (
     <div
-      className="max-w-4xl mx-auto border border-card-line rounded-xl p-5 mb-5 bg-card shadow-sm hover:shadow-lg hover:-translate-y-1 transition"
+      className="max-w-4xl mx-auto border border-card-line rounded-xl px-4 py-3 mb-4 
+      bg-card shadow-sm hover:shadow-lg hover:-translate-y-1 transition"
     >
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-        <h2 className="font-semibold text-lg text-ink">
-          {order._id}
+
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+        <h2
+          onClick={handleViewDetails}
+          className="font-semibold text-lg text-ink cursor-pointer hover:text-gold transition"
+        >
+          #{order._id.slice(-8).toUpperCase()}
         </h2>
 
         <span
@@ -38,8 +48,13 @@ function OrderCard({ order }) {
         </span>
       </div>
 
-      <p className="text-ink-soft mb-3">
-        {new Date(order.createdAt).toLocaleDateString()}
+
+      <p className="text-ink-soft text-sm mb-3">
+        {new Date(order.createdAt).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}
       </p>
 
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
@@ -59,10 +74,12 @@ function OrderCard({ order }) {
           >
             <ArrowRight size={18} />
           </button>
-
-
         </div>
+
+
       </div>
+
+
     </div>
   );
 }
