@@ -15,7 +15,7 @@ function AuthButton({
             type={type}
         >
             {loading ? (
-                <span className="h-5 w-5 animate-spin rounded-full border-2 border-on-gold border-t-transparent" />
+                <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-on-gold" />
             ) : (
                 text
             )}

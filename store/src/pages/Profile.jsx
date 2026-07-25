@@ -7,6 +7,7 @@ import LogoutButton from "../components/layout/ui/LogoutButton";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 
 function Profile() {
@@ -43,7 +44,7 @@ function Profile() {
     setIsEditing(false);
   };
   if (!user) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner label="Loading profile..." />;
   }
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">

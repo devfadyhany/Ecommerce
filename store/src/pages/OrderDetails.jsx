@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -14,21 +16,30 @@ export default function OrderDetails() {
   const getOrderDetails = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await api.get(`/orders/my/${id}`);
 
       if (res.data.success) {
         setOrder(res.data.order);
+      } else {
+        setError("Failed to fetch order details.");
       }
     } catch (err) {
       console.error("Failed to fetch order details:", err);
-      setError(err);
+      const errorMsg =
+        err.response?.data?.message || "Failed to load order details.";
+      setError(errorMsg);
+      showErrorToast(errorMsg);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getOrderDetails();
+    if (id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      getOrderDetails();
+    }
   }, [id]);
 
   const handleCancel = async () => {
@@ -37,30 +48,45 @@ export default function OrderDetails() {
       setCancelling(true);
       const res = await api.patch(`/orders/my/${id}/cancel`);
       if (res.data.success) {
+        showSuccessToast("Order cancelled successfully");
         await getOrderDetails();
       }
     } catch (err) {
       console.error("Failed to cancel order:", err);
-      alert("Could not cancel the order. Please try again.");
+      showErrorToast(
+        err.response?.data?.message || "Could not cancel the order.",
+      );
     } finally {
       setCancelling(false);
     }
   };
 
-  if (loading)
+  if (loading) {
+    return <LoadingSpinner label="Loading order details..." />;
+  }
+
+  if (error) {
     return (
-      <div className="text-center p-10 text-ink font-medium">LOADING...</div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-surface text-center p-6">
+        <h2 className="text-2xl font-bold text-red-600 mb-2">Oops!</h2>
+        <p className="text-ink-soft mb-6">{error}</p>
+        <button
+          onClick={getOrderDetails}
+          className="px-6 py-2.5 bg-gold text-on-gold rounded-xl font-bold hover:bg-gold-deep transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
     );
-  if (error)
+  }
+
+  if (!order) {
     return (
-      <div className="text-center p-10 text-red-500 font-medium">ERROR</div>
-    );
-  if (!order)
-    return (
-      <div className="text-center p-10 text-ink font-medium">
+      <div className="min-h-screen flex items-center justify-center text-center p-6 text-ink font-medium">
         Order not found
       </div>
     );
+  }
 
   const currentIdx = steps.indexOf(order.status);
   const canCancel = order.status === "pending" || order.status === "confirmed";
@@ -105,7 +131,9 @@ export default function OrderDetails() {
           <div className="absolute top-4 left-0 right-0 h-1 bg-surface-fields -z-10" />
           <div
             className="absolute top-4 left-0 h-1 bg-gold transition-all duration-300 -z-10"
-            style={{ width: `${(currentIdx / (steps.length - 1)) * 100}%` }}
+            style={{
+              width: `${currentIdx > 0 ? (currentIdx / (steps.length - 1)) * 100 : 0}%`,
+            }}
           />
         </div>
       </div>
@@ -116,13 +144,14 @@ export default function OrderDetails() {
             Items
           </h2>
           <div className="space-y-4">
-            {order.items.map((item) => (
+            {order.items?.map((item) => (
               <div
-                key={item.product}
+                key={item.product || item._id}
                 className="flex justify-between items-center py-2 border-b border-seam last:border-0"
               >
                 <div>
                   <p className="font-semibold text-ink">{item.name}</p>
+                  <p className="text-xs text-ink-soft">Qty: {item.quantity}</p>
                 </div>
                 <span className="font-bold text-gold">
                   {item.price * item.quantity} EGP
@@ -133,30 +162,32 @@ export default function OrderDetails() {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
-            <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-seam">
-              Shipping & Payment
-            </h2>
-            <div className="text-sm space-y-2 text-ink-soft">
-              <p className="font-semibold text-ink">
-                {order.shippingAddress.fullName}
-              </p>
-              <p>
-                {order.shippingAddress.address}, {order.shippingAddress.city}
-              </p>
-              <p>
-                {order.shippingAddress.country},{" "}
-                {order.shippingAddress.postalCode}
-              </p>
-              <p className="pt-2">Phone: {order.shippingAddress.phone}</p>
-              <p className="pt-2 border-t border-seam">
-                Payment Method:{" "}
-                <span className="font-medium capitalize text-ink">
-                  {order.paymentMethod}
-                </span>
-              </p>
+          {order.shippingAddress && (
+            <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
+              <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-seam">
+                Shipping & Payment
+              </h2>
+              <div className="text-sm space-y-2 text-ink-soft">
+                <p className="font-semibold text-ink">
+                  {order.shippingAddress.fullName}
+                </p>
+                <p>
+                  {order.shippingAddress.address}, {order.shippingAddress.city}
+                </p>
+                <p>
+                  {order.shippingAddress.country},{" "}
+                  {order.shippingAddress.postalCode}
+                </p>
+                <p className="pt-2">Phone: {order.shippingAddress.phone}</p>
+                <p className="pt-2 border-t border-seam">
+                  Payment Method:{" "}
+                  <span className="font-medium capitalize text-ink">
+                    {order.paymentMethod}
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="rounded-xl p-6 bg-surface-soft border border-line shadow-md">
             <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-line">
@@ -193,9 +224,16 @@ export default function OrderDetails() {
               <button
                 onClick={handleCancel}
                 disabled={cancelling}
-                className="w-full mt-6 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-6 py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl shadow-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
               >
-                {cancelling ? "Cancelling..." : "Cancel Order"}
+                {cancelling ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white" />
+                    Cancelling...
+                  </>
+                ) : (
+                  "Cancel Order"
+                )}
               </button>
             )}
           </div>
@@ -203,7 +241,6 @@ export default function OrderDetails() {
           {order.customerNote && (
             <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
               <h2 className="text-sm font-bold text-ink mb-2">
-                {" "}
                 Customer Note:
               </h2>
               <p className="text-sm text-ink-soft italic">

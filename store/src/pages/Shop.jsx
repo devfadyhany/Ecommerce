@@ -9,6 +9,7 @@ import EmptyState from "../components/ui/EmptyState";
 import { useState } from "react";
 import ActiveFilters from "../components/products/ActiveFilters";
 import Button from "../components/ui/Button";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -89,10 +90,13 @@ function Shop() {
                 onRetry={() => handleClearFilters()}
               />
             ) : loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <ProductCardSkeleton key={i} />
-                ))}
+              <div className="space-y-6">
+                <LoadingSpinner label="Loading products..." />
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 opacity-60">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <ProductCardSkeleton key={i} />
+                  ))}
+                </div>
               </div>
             ) : isEmpty ? (
               <EmptyState
