@@ -11,37 +11,37 @@ function Footer() {
 
   return (
     <footer className="bg-layout border-t border-card-line">
-      <div className="max-w-7xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr] gap-20">
           {/* Logo */}
           <div>
-            <div className="flex items-center gap-2 text-gold text-3xl font-bold">
+            <div className="flex items-center gap-3">
               <img
                 src={theme == "dark" ? LogoDark : Logo}
-                className="size-12"
+                className="h-12 w-auto"
               />
-              <h3 className="font-bold text-ink">
+              <h3 className="text-[30px] font-bold text-ink leading-none">
                 Elite <span className="text-gold">Cart</span>
               </h3>
             </div>
 
-            <p className="mt-6 text-ink-soft text-xl leading-9 max-w-sm">
+            <p className="mt-6 text-md text-ink-soft leading-7 max-w-[340px]">
               Shop the future, delivered today. Premium products at the best
               prices with fast delivery across Egypt.
             </p>
           </div>
 
           {/* Quick Links */}
-          <div className="mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-ink">Quick Links</h2>
+          <div className="justify-self-start md:justify-self-center">
+            <h2 className="text-xl font-semibold mb-6 text-ink">Quick Links</h2>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2 justify-center items-start">
               <button
                 onClick={() => setActive("Shop")}
                 className={
                   active === "Shop"
-                    ? "text-gold text-2xl font-semibold transition"
-                    : "text-ink-soft text-xl hover:text-gold transition"
+                    ? "text-gold text-lg font-medium transition"
+                    : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
               >
                 Shop
@@ -51,8 +51,8 @@ function Footer() {
                 onClick={() => setActive("Orders")}
                 className={
                   active === "Orders"
-                    ? "text-gold text-2xl font-semibold transition"
-                    : "text-ink-soft text-xl hover:text-gold transition"
+                    ? "text-gold text-lg font-medium transition"
+                    : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
               >
                 My Orders
@@ -62,8 +62,8 @@ function Footer() {
                 onClick={() => setActive("Wishlist")}
                 className={
                   active === "Wishlist"
-                    ? "text-gold text-2xl font-semibold transition"
-                    : "text-ink-soft text-xl hover:text-gold transition"
+                    ? "text-gold text-lg font-medium  transition"
+                    : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
               >
                 Wishlist
@@ -73,8 +73,8 @@ function Footer() {
                 onClick={() => setActive("Profile")}
                 className={
                   active === "Profile"
-                    ? "text-gold text-2xl font-semibold transition"
-                    : "text-ink-soft text-xl hover:text-gold transition"
+                    ? "text-gold text-lg font-medium transition"
+                    : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
               >
                 Profile
@@ -83,26 +83,26 @@ function Footer() {
           </div>
 
           {/* Social */}
-          <div className="ml-auto">
-            <h2 className="text-3xl font-bold mb-6 text-ink">Follow Us</h2>
+          <div className="justify-self-start md:justify-self-end">
+            <h2 className="text-xl font-semibold mb-6 text-ink">Follow Us</h2>
 
             <div className="flex gap-4">
-              <div className="w-14 h-14 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaGlobe />
+              <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
+                <FaGlobe className="text-lg" />
               </div>
 
-              <div className="w-14 h-14 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaRegCommentDots />
+              <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
+                <FaRegCommentDots className="text-lg" />
               </div>
 
-              <div className="w-14 h-14 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaRegHeart />
+              <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
+                <FaRegHeart className="text-lg" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-card-line mt-12 pt-8 text-center text-ink-faint text-lg">
+        <div className="border-t border-card-line mt-16 pt-10 text-center text-ink-faint text-sm">
           © 2026 Elite Cart. All rights reserved.
         </div>
       </div>
