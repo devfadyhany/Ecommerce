@@ -4,6 +4,7 @@ import api from "../api/axios";
 const CartContext = createContext();
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(null);
+  const [wishlist, setWishlist] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const getCart = async () => {
@@ -20,6 +21,18 @@ export function CartProvider({ children }) {
       setLoading(false);
     }
   };
+  // 
+  const getWishlist = async () => {
+  try {
+    const res = await api.get("/wishlists/my");
+
+    if (res.data.success) {
+      setWishlist(res.data);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const addToCart = async (productId, quantity = 1) => {
     try {
@@ -33,7 +46,16 @@ export function CartProvider({ children }) {
       console.error(err);
     }
   };
+// 
+const addToWishlist = async (productId) => {
+  try {
+    await api.post(`/wishlists/add/${productId}`);
 
+    getWishlist();
+  } catch (err) {
+    console.error(err);
+  }
+};
   const updateQuantity = async (productId, quantity) => {
     try {
       await api.patch("/carts/items", {
@@ -54,7 +76,16 @@ export function CartProvider({ children }) {
       console.error(err);
     }
   };
+// 
+const removeFromWishlist = async (productId) => {
+  try {
+    await api.delete(`/wishlists/remove/${productId}`);
 
+    getWishlist();
+  } catch (err) {
+    console.error(err);
+  }
+};
   const clearCart = async () => {
     try {
       await api.delete("/carts/clear");
@@ -63,6 +94,15 @@ export function CartProvider({ children }) {
       console.error(err);
     }
   };
+  // 
+  const clearWishlist = async () => {
+  try {
+    await api.delete("/wishlists/clear");
+    getWishlist();
+  } catch (err) {
+    console.error(err);
+  }
+};
   const applyCoupon = async (code) => {
     try {
       await api.post("/carts/coupon", {
@@ -84,6 +124,7 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     getCart();
+    getWishlist();
   }, []);
 
   return (
@@ -100,6 +141,11 @@ export function CartProvider({ children }) {
         clearCart,
         applyCoupon,
         removeCoupon,
+        wishlist,
+        getWishlist,
+        addToWishlist,
+        removeFromWishlist,
+        clearWishlist,
       }}
     >
       {children}
