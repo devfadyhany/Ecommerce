@@ -32,7 +32,7 @@ function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="justify-self-center">
+          <div className="justify-self-start md:justify-self-center">
             <h2 className="text-xl font-semibold mb-6 text-ink">Quick Links</h2>
 
             <div className="flex flex-col gap-2 justify-center items-start">
@@ -83,20 +83,20 @@ function Footer() {
           </div>
 
           {/* Social */}
-          <div className="justify-self-center md:justify-self-end">
+          <div className="justify-self-start md:justify-self-end">
             <h2 className="text-xl font-semibold mb-6 text-ink">Follow Us</h2>
 
             <div className="flex gap-4">
               <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaGlobe className="text-lg"/>
+                <FaGlobe className="text-lg" />
               </div>
 
               <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaRegCommentDots className="text-lg"/>
+                <FaRegCommentDots className="text-lg" />
               </div>
 
               <div className="w-10 h-10 rounded-full bg-surface-fields text-ink-soft flex items-center justify-center hover:bg-gold hover:text-on-gold transition cursor-pointer">
-                <FaRegHeart className="text-lg"/>
+                <FaRegHeart className="text-lg" />
               </div>
             </div>
           </div>
@@ -111,8 +111,3 @@ function Footer() {
 }
 
 export default Footer;
-
-
-
-
-
