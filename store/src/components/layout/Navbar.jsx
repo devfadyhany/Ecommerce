@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Search,
   Moon,
@@ -18,9 +19,13 @@ import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [search, setSearch] = useState("");
+
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
-  const { cart } = useCart();
+  const { cart, wishlist } = useCart();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -29,17 +34,25 @@ const Navbar = () => {
     { name: "Wishlist", path: "/wishlist" },
   ];
 
+  const handleSearchSubmit = () => {
+    if (search.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(search.trim())}`);
+      setShowSearch(false);
+      setSearch("");
+    }
+  };
+
   return (
     <nav className="w-full bg-layout border-b border-card-line shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
-          <img src={theme == "dark" ? LogoDark : Logo} className="size-12" />
+        <Link to="/" className="flex items-center gap-2">
+          <img src={theme === "dark" ? LogoDark : Logo} className="size-12" alt="Logo" />
           <div className="hidden lg:flex flex-col">
             <h3 className="text-xl font-bold text-ink">
               Elite <span className="text-gold">Cart</span>
             </h3>
           </div>
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center bg-surface-fields border border-line rounded-full p-1.5 shadow-inner">
           {navItems.map((item) => (
@@ -60,18 +73,45 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
-          <button className="hidden sm:flex size-10 sm:size-12 rounded-full border border-line items-center justify-center text-ink group">
-            <Search
-              size={16}
-              className="sm:w-[18px] sm:h-[18px] group-hover:text-gold"
-            />
-          </button>
+          {showSearch ? (
+            <div className="flex items-center gap-1">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearchSubmit();
+                  }
+                }}
+                placeholder="Search..."
+                autoFocus
+                className="hidden sm:block border border-line rounded-full px-4 py-1.5 text-sm outline-none"
+              />
+              <button
+                onClick={() => setShowSearch(false)}
+                className="hidden sm:flex text-ink-soft hover:text-ink p-1"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowSearch(true)}
+              className="hidden sm:flex size-10 sm:size-12 rounded-full border border-line items-center justify-center text-ink group"
+            >
+              <Search
+                size={16}
+                className="sm:w-[18px] sm:h-[18px] group-hover:text-gold"
+              />
+            </button>
+          )}
 
           <button
             onClick={toggleTheme}
             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-line flex items-center justify-center text-ink group"
           >
-            {theme == "dark" ? (
+            {theme === "dark" ? (
               <Sun
                 size={16}
                 className="sm:w-[18px] sm:h-[18px] group-hover:text-gold"
@@ -92,9 +132,11 @@ const Navbar = () => {
               size={16}
               className="sm:w-[18px] sm:h-[18px] group-hover:text-gold"
             />
+            {user && wishlist?.length > 0 && (
             <span className="absolute -top-1 -right-1 bg-gold text-on-gold text-[9px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-card">
-              7
+              {wishlist?.length || 0}
             </span>
+            )}
           </Link>
 
           <NavLink
@@ -107,7 +149,7 @@ const Navbar = () => {
             />
             {cart && (
               <span className="absolute -top-1 -right-1 bg-gold text-on-gold text-[9px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-card">
-                {cart.itemCount}
+                {cart.itemCount || 0}
               </span>
             )}
           </NavLink>

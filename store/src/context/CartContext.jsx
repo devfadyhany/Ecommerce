@@ -4,7 +4,7 @@ import api from "../api/axios";
 const CartContext = createContext();
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(null);
-  const [wishlist, setWishlist] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const getCart = async () => {
@@ -27,7 +27,7 @@ export function CartProvider({ children }) {
     const res = await api.get("/wishlists/my");
 
     if (res.data.success) {
-      setWishlist(res.data);
+      setWishlist(res.data.data);
     }
   } catch (err) {
     console.error(err);
@@ -142,6 +142,7 @@ const removeFromWishlist = async (productId) => {
         applyCoupon,
         removeCoupon,
         wishlist,
+        setWishlist,
         getWishlist,
         addToWishlist,
         removeFromWishlist,
