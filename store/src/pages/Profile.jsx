@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
+import LoadingSpinner from "../components/ui/LoadingSpinner"; 
 
 function Profile() {
   const [loading, setLoading] = useState(false);
@@ -42,9 +43,11 @@ function Profile() {
   const onCancel = () => {
     setIsEditing(false);
   };
+
   if (!user) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner label="Loading profile..." />;
   }
+
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <h2 className="text-ink font-bold text-3xl">My Profile</h2>

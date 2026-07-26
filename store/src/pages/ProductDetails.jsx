@@ -7,6 +7,7 @@ import {
   showInfoToast,
 } from "../utils/toastHelpers";
 import api from "../api/axios";
+import LoadingSpinner from "../components/ui/LoadingSpinner"; 
 
 import ImageGallery from "../components/ui/ImageGallery";
 import ProductInfo from "../components/ui/ProductInfo";
@@ -31,43 +32,39 @@ const ProductDetails = () => {
   const [reviewComment, setReviewComment] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
 
-  useEffect(() => {
-    const fetchProductData = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(`/products/${id}`);
+  const fetchProductData = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const response = await api.get(`/products/${id}`);
 
-        let fetchedProduct = null;
-        if (response.data && response.data.product) {
-          fetchedProduct = response.data.product;
-        } else {
-          fetchedProduct = response.data;
-        }
-
-        console.log(response.data);
-
-        setProduct(fetchedProduct);
-        setError("");
-
-        if (fetchedProduct && fetchedProduct.category) {
-          // eslint-disable-next-line react-hooks/immutability
-          fetchRelatedProducts(
-            fetchedProduct.category,
-            fetchedProduct._id || fetchedProduct.id,
-          );
-        }
-      } catch (err) {
-        console.error("Error fetching product:", err);
-        setError("Failed to load product details.");
-        showErrorToast("Error fetching product details!");
-      } finally {
-        setLoading(false);
+      let fetchedProduct = null;
+      if (response.data && response.data.product) {
+        fetchedProduct = response.data.product;
+      } else {
+        fetchedProduct = response.data;
       }
-    };
 
+      setProduct(fetchedProduct);
+
+      if (fetchedProduct && fetchedProduct.category) {
+        fetchRelatedProducts(
+          fetchedProduct.category,
+          fetchedProduct._id || fetchedProduct.id,
+        );
+      }
+    } catch (err) {
+      console.error("Error fetching product:", err);
+      setError("Failed to load product details. Please try again later.");
+      showErrorToast("Error fetching product details!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (id) {
       fetchProductData();
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuantity(1);
       setCurrentImageIndex(0);
     }
@@ -134,7 +131,6 @@ const ProductDetails = () => {
       setIsAddingMainToCart(true);
       await api.post("/carts/items", { productId: id, quantity });
       showSuccessToast("Added to cart successfully! ");
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Failed to add to cart. Please check your login status.");
     } finally {
@@ -147,7 +143,6 @@ const ProductDetails = () => {
       setAddingRelatedId(productId);
       await api.post("/carts/items", { productId, quantity: 1 });
       showSuccessToast("Added to cart successfully! ");
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Failed to add to cart.");
     } finally {
@@ -166,7 +161,6 @@ const ProductDetails = () => {
         setIsWishlisted(false);
         showInfoToast("Removed from wishlist.");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Please login first to manage your wishlist.");
     }
@@ -184,7 +178,6 @@ const ProductDetails = () => {
         setWishlistedIds((prev) => prev.filter((favId) => favId !== productId));
         showInfoToast("Removed from wishlist.");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast("Please login first to manage your wishlist.");
     }
@@ -214,7 +207,6 @@ const ProductDetails = () => {
         reviews: [...prev.reviews, newReview],
       }));
       setReviewComment("");
-      // eslint-disable-next-line no-unused-vars
     } catch (err) {
       showErrorToast(
         "Failed to add review. Only registered buyers can leave reviews.",
@@ -225,19 +217,22 @@ const ProductDetails = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-surface">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
-      </div>
-    );
+    return <LoadingSpinner label="Loading product details..." />;
   }
 
   if (error || !product) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-surface">
-        <p className="text-red-500 font-semibold">
-          {error || "Product not found."}
-        </p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-surface p-6 text-ink">
+        <div className="text-center bg-card p-8 rounded-xl border border-card-line shadow-md max-w-md w-full">
+          <h2 className="text-xl font-bold text-red-600 mb-2">Oops! Something went wrong</h2>
+          <p className="text-ink-soft mb-6">{error || "Product not found."}</p>
+          <button
+            onClick={fetchProductData}
+            className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold shadow-sm"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
