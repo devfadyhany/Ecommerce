@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -14,6 +15,7 @@ export default function OrderDetails() {
   const getOrderDetails = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await api.get(`/orders/my/${id}`);
 
       if (res.data.success) {
@@ -21,7 +23,7 @@ export default function OrderDetails() {
       }
     } catch (err) {
       console.error("Failed to fetch order details:", err);
-      setError(err);
+      setError(err.response?.data?.message || "Failed to load order details. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -47,17 +49,30 @@ export default function OrderDetails() {
     }
   };
 
-  if (loading)
+  if (loading) {
+    return <LoadingSpinner label="Loading order details..." />;
+  }
+
+  if (error) {
     return (
-      <div className="text-center p-10 text-ink font-medium">LOADING...</div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-surface p-6 text-ink">
+        <div className="text-center bg-card p-8 rounded-xl border border-card-line shadow-md max-w-md w-full">
+          <h2 className="text-xl font-bold text-red-600 mb-2">Oops! Something went wrong</h2>
+          <p className="text-ink-soft mb-6">{error}</p>
+          <button
+            onClick={getOrderDetails}
+            className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold shadow-sm"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
     );
-  if (error)
-    return (
-      <div className="text-center p-10 text-red-500 font-medium">ERROR</div>
-    );
+  }
+
   if (!order)
     return (
-      <div className="text-center p-10 text-ink font-medium">
+      <div className="min-h-screen flex items-center justify-center text-center p-10 text-ink font-medium">
         Order not found
       </div>
     );
@@ -203,7 +218,6 @@ export default function OrderDetails() {
           {order.customerNote && (
             <div className="rounded-xl p-6 bg-card border border-card-line shadow-md">
               <h2 className="text-sm font-bold text-ink mb-2">
-                {" "}
                 Customer Note:
               </h2>
               <p className="text-sm text-ink-soft italic">
