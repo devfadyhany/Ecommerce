@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
@@ -46,7 +45,11 @@ const Navbar = () => {
     <nav className="w-full bg-layout border-b border-card-line shadow-sm fixed top-0 left-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src={theme === "dark" ? LogoDark : Logo} className="size-12" alt="Logo" />
+          <img
+            src={theme === "dark" ? LogoDark : Logo}
+            className="size-12"
+            alt="Logo"
+          />
           <div className="hidden lg:flex flex-col">
             <h3 className="text-xl font-bold text-ink">
               Elite <span className="text-gold">Cart</span>
@@ -132,10 +135,10 @@ const Navbar = () => {
               size={16}
               className="sm:w-[18px] sm:h-[18px] group-hover:text-gold"
             />
-            {user && wishlist?.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-gold text-on-gold text-[9px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-card">
-              {wishlist?.length || 0}
-            </span>
+            {wishlist && (
+              <span className="absolute -top-1 -right-1 bg-gold text-on-gold text-[9px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-card">
+                {wishlist.totalProducts}
+              </span>
             )}
           </Link>
 
@@ -149,7 +152,7 @@ const Navbar = () => {
             />
             {cart && (
               <span className="absolute -top-1 -right-1 bg-gold text-on-gold text-[9px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center border-2 border-card">
-                {cart.itemCount || 0}
+                {cart.itemCount}
               </span>
             )}
           </NavLink>
