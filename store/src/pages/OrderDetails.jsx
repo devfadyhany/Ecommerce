@@ -23,7 +23,10 @@ export default function OrderDetails() {
       }
     } catch (err) {
       console.error("Failed to fetch order details:", err);
-      setError(err.response?.data?.message || "Failed to load order details. Please try again later.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to load order details. Please try again later.",
+      );
     } finally {
       setLoading(false);
     }
@@ -57,7 +60,9 @@ export default function OrderDetails() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-surface p-6 text-ink">
         <div className="text-center bg-card p-8 rounded-xl border border-card-line shadow-md max-w-md w-full">
-          <h2 className="text-xl font-bold text-red-600 mb-2">Oops! Something went wrong</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-2">
+            Oops! Something went wrong
+          </h2>
           <p className="text-ink-soft mb-6">{error}</p>
           <button
             onClick={getOrderDetails}
@@ -81,60 +86,59 @@ export default function OrderDetails() {
   const canCancel = order.status === "pending" || order.status === "confirmed";
 
   return (
- <div className="max-w-6xl mx-auto px-6 pt-24 pb-16 bg-surface min-h-screen text-ink">
-   <div className="pt-4 pb-10 mb-14 border-b border-line">
+    <div className="max-w-6xl mx-auto p-6 my-24 rounded-xl bg-surface min-h-screen text-ink">
+      <div className="pt-4 pb-10 mb-14 border-b border-line">
         <h1 className="text-3xl font-bold text-ink mb-2">Order #{order._id}</h1>
         <p className="text-sm text-ink-soft">
           Placed on {new Date(order.createdAt).toLocaleDateString()}
         </p>
       </div>
-<div className="mt-6 mb-16 bg-surface-soft p-8 rounded-2xl shadow-md border border-line">
-  <div className="relative">
+      <div className="mt-6 mb-16 bg-surface-soft p-8 rounded-2xl shadow-md border border-line">
+        <div className="relative">
+          {/* Gray Line */}
+          <div className="absolute left-[8%] right-[8%] top-5 h-[2px] bg-line"></div>
 
-    {/* Gray Line */}
-    <div className="absolute left-[8%] right-[8%] top-5 h-[2px] bg-line"></div>
+          {/* Gold Line */}
+          <div
+            className="absolute left-[8%] top-5 h-[2px] bg-gold transition-all duration-300"
+            style={{
+              width: `${(currentIdx / (steps.length - 1)) * 84}%`,
+            }}
+          ></div>
 
-    {/* Gold Line */}
-    <div
-      className="absolute left-[8%] top-5 h-[2px] bg-gold transition-all duration-300"
-      style={{
-        width: `${(currentIdx / (steps.length - 1)) * 84}%`,
-      }}
-    ></div>
+          <div className="flex justify-between relative z-10">
+            {steps.map((step, idx) => {
+              const active = idx <= currentIdx;
 
-    <div className="flex justify-between relative z-10">
-      {steps.map((step, idx) => {
-        const active = idx <= currentIdx;
-
-        return (
-          <div key={step} className="flex flex-col items-center flex-1">
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm
+              return (
+                <div key={step} className="flex flex-col items-center flex-1">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm
               ${
                 active
                   ? "bg-gold text-white"
                   : "bg-white border-2 border-gray-300 text-gray-400"
               }`}
-            >
-              {idx + 1}
-            </div>
+                  >
+                    {idx + 1}
+                  </div>
 
-            <p
-              className={`mt-3 text-sm font-semibold capitalize ${
-                active ? "text-gold" : "text-gray-400"
-              }`}
-            >
-              {step}
-            </p>
+                  <p
+                    className={`mt-3 text-sm font-semibold capitalize ${
+                      active ? "text-gold" : "text-gray-400"
+                    }`}
+                  >
+                    {step}
+                  </p>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
-    </div>
-  </div>
-</div>
+        </div>
+      </div>
 
-     <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.9fr] gap-10 items-start">
-       <div className="rounded-2xl p-6 bg-card border border-card-line shadow-md self-start h-fit">
+      <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.9fr] gap-10 items-start">
+        <div className="rounded-2xl p-6 bg-card border border-card-line shadow-md self-start h-fit">
           <h2 className="text-xl font-bold text-ink mb-4 pb-2 border-b border-seam">
             Items
           </h2>
