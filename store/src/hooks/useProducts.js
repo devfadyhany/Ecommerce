@@ -10,7 +10,7 @@ export function useProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
 
 
-  //Data state 
+  //Data state
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -18,7 +18,7 @@ export function useProducts() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
 
-  //Filters  
+  //Filters
   const [filters, setFilters] = useState({
     category: searchParams.get("category") || "",
     minPrice: "",
@@ -34,7 +34,7 @@ export function useProducts() {
   // categories accumulate across every response so the filter list never shrinks just because the user narrowed results down
   const [categories, setCategories] = useState([]);
 
-  //Per-card action state (kept local, not global) 
+  //Per-card action state (kept local, not global)
   const [wishlistedIds, setWishlistedIds] = useState([]);
   const [addingProductId, setAddingProductId] = useState(null);
 
@@ -42,42 +42,45 @@ export function useProducts() {
   const isFirstPriceRun = useRef(true);
   const isFirstSearchRun = useRef(true);
 
-  const fetchProducts = useCallback(async (pageToFetch, activeFilters, append) => {
-    try {
-      append ? setLoadingMore(true) : setLoading(true);
-      setError("");
+  const fetchProducts = useCallback(
+    async (pageToFetch, activeFilters, append) => {
+      try {
+        append ? setLoadingMore(true) : setLoading(true);
+        setError("");
 
-      const params = {
-        page: pageToFetch,
-        limit: PRODUCTS_PAGE_LIMIT,
-        ...(activeFilters.category && { category: activeFilters.category }),
-        ...(activeFilters.minPrice && { minPrice: activeFilters.minPrice }),
-        ...(activeFilters.maxPrice && { maxPrice: activeFilters.maxPrice }),
-        ...(activeFilters.sort && { sort: activeFilters.sort }),
-        ...(activeFilters.search && { search: activeFilters.search }),
-      };
+        const params = {
+          page: pageToFetch,
+          limit: PRODUCTS_PAGE_LIMIT,
+          ...(activeFilters.category && { category: activeFilters.category }),
+          ...(activeFilters.minPrice && { minPrice: activeFilters.minPrice }),
+          ...(activeFilters.maxPrice && { maxPrice: activeFilters.maxPrice }),
+          ...(activeFilters.sort && { sort: activeFilters.sort }),
+          ...(activeFilters.search && { search: activeFilters.search }),
+        };
 
-      const res = await api.get("/products", { params });
+        const res = await api.get("/products", { params });
 
-      if (res.data?.success) {
-        const fetched = res.data.products || [];
+        if (res.data?.success) {
+          const fetched = res.data.products || [];
 
-        setProducts((prev) => (append ? [...prev, ...fetched] : fetched));
-        setTotalPages(res.data.totalPages || 1);
-        setPage(pageToFetch);
+          setProducts((prev) => (append ? [...prev, ...fetched] : fetched));
+          setTotalPages(res.data.totalPages || 1);
+          setPage(pageToFetch);
 
-        setCategories((prev) => {
-          const incoming = fetched.map((p) => p.category).filter(Boolean);
-          return Array.from(new Set([...prev, ...incoming]));
-        });
+          setCategories((prev) => {
+            const incoming = fetched.map((p) => p.category).filter(Boolean);
+            return Array.from(new Set([...prev, ...incoming]));
+          });
+        }
+      } catch (err) {
+        setError(PRODUCT_MESSAGES.FETCH_ERROR);
+      } finally {
+        setLoading(false);
+        setLoadingMore(false);
       }
-    } catch (err) {
-      setError(PRODUCT_MESSAGES.FETCH_ERROR);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   // Debounce price inputs
   useEffect(() => {
@@ -95,7 +98,7 @@ export function useProducts() {
     return () => clearTimeout(timeout);
   }, [priceDraft]);
 
-  // Debounce search input 
+  // Debounce search input
   useEffect(() => {
     if (isFirstSearchRun.current) {
       isFirstSearchRun.current = false;
@@ -111,7 +114,7 @@ export function useProducts() {
   useEffect(() => {
     if (isFirstRun.current) {
       isFirstRun.current = false;
-    } 
+    }
     fetchProducts(1, filters, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
@@ -229,7 +232,7 @@ export function useProducts() {
     searchTerm,
     setSearchTerm,
 
-    // wishlist 
+    // wishlist
     wishlistedIds,
     addingProductId,
 
