@@ -1,24 +1,35 @@
-import React, { use } from "react";
-import Getwishlist from "../components/ui/Getwishlist";
+import React from "react";
 import WishlistCard from "../components/ui/WishlistCard";
 import WishlistSkeleton from "../components/ui/WishlistSkeleton";
 import { CiHeart } from "react-icons/ci";
 import { useNavigate } from "react-router";
+import { useCart } from "../context/CartContext";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 
 function Wishlist() {
-  const { dataWishlist, loading, error,delcard } = Getwishlist();
-  const Navigate =useNavigate()
+  const { wishlist, setWishlist, removeFromWishlist } = useCart();
+  const Navigate = useNavigate();
 
-  // if (error) {
-  //   return (
-  //     <div className="min-h-screen w-full flex items-center justify-center bg-[var(--sef-bg-primary)]">
-  //       <p className="text-[var(--sef-text-primary)] font-medium text-4xl">
-  //         error fetch data
-  //       </p>
-  //     </div>
-  //   );
-  // }
-      console.log(dataWishlist)
+  const loading = wishlist === null;
+  const dataWishlist = wishlist?.wishlist?.products || [];
+
+  const delcard = async (id) => {
+    setWishlist((prev) => ({
+      ...prev,
+      wishlist: {
+        ...prev.wishlist,
+        products: prev.wishlist.products.filter((item) => item._id !== id),
+      },
+    }));
+
+    try {
+      await removeFromWishlist(id);
+      showSuccessToast("Success delete card");
+    } catch (err) {
+      showErrorToast("Failed to delete card");
+    }
+  };
+
   return (
     <div className="min-h-screen w-full py-4">
       <div className="container max-w-7xl px-4 mx-auto">
@@ -52,11 +63,25 @@ function Wishlist() {
       </div>
 
       {!loading && (!dataWishlist || dataWishlist.length === 0) && (
-      <div className="flex flex-col items-center py-12 gap-5">
-        <p className="mb-5 "><CiHeart size={90} className="text-[var(--sef-text-primary)]"/></p>
-        <p className="text-4xl text-[var(--sef-text-primary)]">Your wishlist is empty</p>
-        <p className="w-100 text-center text-[var(--sef-text-primary)]">Save items you love to your wishlist. They'll be waiting for you here.</p>
-        <button onClick={()=>{Navigate('/shop')}} className="py-3 px-25 mt-6 rounded-xl text-xl bg-[var(--sef-gold-secondary)]">Browse Products</button>
+        <div className="flex flex-col items-center py-12 gap-5">
+          <p className="mb-5 ">
+            <CiHeart size={90} className="text-[var(--sef-text-primary)]" />
+          </p>
+          <p className="text-4xl text-[var(--sef-text-primary)]">
+            Your wishlist is empty
+          </p>
+          <p className="w-100 text-center text-[var(--sef-text-primary)]">
+            Save items you love to your wishlist. They'll be waiting for you
+            here.
+          </p>
+          <button
+            onClick={() => {
+              Navigate("/shop");
+            }}
+            className="py-3 px-25 mt-6 rounded-xl text-xl bg-[var(--sef-gold-secondary)]"
+          >
+            Browse Products
+          </button>
         </div>
       )}
     </div>
