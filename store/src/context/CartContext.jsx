@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/axios";
+import { showErrorToast } from "../utils/toastHelpers";
 
 const CartContext = createContext();
 export function CartProvider({ children }) {
@@ -66,7 +67,8 @@ export function CartProvider({ children }) {
 
       getCart();
     } catch (err) {
-      console.error(err);
+      if (err.status == 404) showErrorToast("Cart or item not found");
+      else if (err.status == 400) showErrorToast("Insufficient stock");
     }
   };
 

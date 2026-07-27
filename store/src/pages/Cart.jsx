@@ -1,74 +1,52 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import api from "../api/axios";
-import LoadingSpinner from "../components/ui/LoadingSpinner"; 
+import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { useCart } from "../context/CartContext";
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
+  const {
+    cart,
+    loading,
+    updateQuantity,
+    removeFromCart,
+    applyCoupon: applyCouponContext,
+  } = useCart();
 
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await api.get("/carts");
-        setCartItems(response.data.items || response.data || []);
-      } catch (err) {
-        console.error("Error fetching cart:", err);
-        setError(
-          err.response?.data?.message || "Failed to load cart items. Please try again later."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCart();
-  }, []);
+  const cartItems = cart?.items || [];
 
   const subtotal = cartItems.reduce(
-    (total, item) => total + (item.price || item.product?.price || 0) * (item.quantity || 1),
+    (total, item) =>
+      total + (item.price || item.product?.price || 0) * (item.quantity || 1),
     0,
   );
-  const shipping = 0;
+  const shipping = subtotal > 1000 ? 0 : 50;
   const tax = subtotal * 0.14;
   const total = subtotal + shipping + tax - discount;
 
-  const increaseQuantity = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id || item._id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ),
-    );
+  const increaseQuantity = (productId, quantity) => {
+    updateQuantity(productId, quantity + 1);
   };
 
-  const decreaseQuantity = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        (item.id === id || item._id === id) && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      ),
-    );
+  const decreaseQuantity = (productId, quantity) => {
+    if (quantity > 1) {
+      updateQuantity(productId, quantity - 1);
+    }
   };
 
   const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id && item._id !== id));
+    removeFromCart(id);
   };
 
   const applyCoupon = () => {
-    if (coupon.trim().toUpperCase() === "DATA1") {
-      setDiscount(subtotal * 0.1);
-    } else {
-      setDiscount(0);
-      alert("Invalid Coupon");
+    if (coupon.trim()) {
+      applyCouponContext(coupon);
+      if (coupon.trim().toUpperCase() === "DATA1") {
+        setDiscount(subtotal * 0.1);
+      }
     }
   };
 
@@ -80,7 +58,9 @@ function Cart() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-surface-soft p-6">
         <div className="text-center bg-card p-8 rounded-xl border border-card-line shadow-sm max-w-md w-full">
-          <h2 className="text-xl font-bold text-red-600 mb-2">Oops! Something went wrong</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-2">
+            Oops! Something went wrong
+          </h2>
           <p className="text-ink-soft mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
@@ -112,7 +92,7 @@ function Cart() {
                 </div>
               ) : (
                 cartItems.map((item) => {
-                  const itemId = item.id || item._id;
+                  const itemId = item.product;
                   const itemName = item.name || item.product?.name;
                   const itemPrice = item.price || item.product?.price || 0;
                   const itemImage = item.image || item.product?.image;
@@ -138,7 +118,9 @@ function Cart() {
 
                           <div className="flex items-center gap-3 mt-3">
                             <button
-                              onClick={() => decreaseQuantity(itemId)}
+                              onClick={() =>
+                                decreaseQuantity(itemId, item.quantity)
+                              }
                               className="w-7 h-7 text-ink-soft border border-line rounded-md hover:bg-surface-fields transition duration-200"
                             >
                               -
@@ -149,7 +131,9 @@ function Cart() {
                             </span>
 
                             <button
-                              onClick={() => increaseQuantity(itemId)}
+                              onClick={() =>
+                                increaseQuantity(itemId, item.quantity)
+                              }
                               className="w-7 h-7 text-ink-soft border border-line rounded-md hover:bg-surface-fields transition duration-200"
                             >
                               +
@@ -236,24 +220,28 @@ function Cart() {
                   {shipping === 0 ? "Free" : `EGP ${shipping}`}
                 </span>
               </div>
+              <p className="text-xs">Free shipping on orders over EGP 1,000</p>
               <div className="flex justify-between">
                 <span>Tax (14%)</span>
                 <span className="font-semibold text-ink">
-                  EGP {tax.toLocaleString()}
+                  EGP {tax.toLocaleString().split(".")[0]}
                 </span>
               </div>
             </div>
 
-            <div className="flex justify-between text-ink-soft pt-4">
-              <span>Discount</span>
-              <span className="text-emerald-600">
-                -EGP {discount.toFixed(2)}
-              </span>
-            </div>
+            {discount > 0 && (
+              <div className="flex justify-between text-ink-soft pt-4">
+                <span>Discount</span>
+                <span className="text-emerald-600">
+                  -EGP {discount.toFixed(2)}
+                </span>
+              </div>
+            )}
+
             <div className="flex justify-between items-center py-4 text-ink">
               <span className="font-bold">Total</span>
               <span className="font-extrabold text-xl text-gold">
-                EGP {total.toLocaleString()}
+                EGP {total.toLocaleString().split(".")[0]}
               </span>
             </div>
 
