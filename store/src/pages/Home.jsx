@@ -1,14 +1,44 @@
-import { FaLaptop, FaTshirt, FaHome, FaHeadphones } from "react-icons/fa";
-
-import { FaShoppingBag, FaShoppingCart, FaTruck } from "react-icons/fa";
-
-import { FaEnvelope } from "react-icons/fa";
+import { useProducts } from "../hooks/useProducts";
+import ProductCard from "../components/products/ProductCard";
+import { Link } from "react-router-dom";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaStar,
+  FaShoppingCart,
+  FaLaptop,
+  FaTshirt,
+  FaHome,
+  FaHeadphones,
+  FaShoppingBag,
+  FaTruck,
+  FaEnvelope,
+} from "react-icons/fa";
 
 function Home() {
-  const links = ["Shop", "My Orders", "Wishlist", "Profile"];
+  
+
+  const {
+  products,
+  loading,
+  wishlistedIds,
+  addingProductId,
+  handleAddToCart,
+  handleToggleWishlist,
+} = useProducts();
+
+const featuredProducts = [
+  {
+    id: 1,
+    title: "Test Product",
+    price: 100,
+    image: "https://via.placeholder.com/200",
+  },
+];
+  console.log(products);
+console.log(featuredProducts);
   return (
     <>
-      {/* ================= HERO SECTION ================= */}
 
       <section className="relative overflow-hidden bg-[image:var(--sef-gradient-gold-deep)]">
         {/* Background Glow */}
@@ -112,95 +142,55 @@ function Home() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS SECTION */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <h2 className="text-4xl font-bold text-ink">Featured Products</h2>
+    
+       {/* FEATURED PRODUCTS SECTION */}
+<section className="py-20">
+  <div className="max-w-7xl mx-auto px-6">
 
-              <p className="text-ink-soft mt-3 text-lg">
-                Handpicked just for you
-              </p>
-            </div>
+    <div className="flex items-center justify-between mb-10">
+      <div>
+        <h2 className="text-4xl font-bold text-ink">
+          Featured Products
+        </h2>
 
-            <button className="text-gold font-semibold hover:text-gold-deep transition">
-              View All →
-            </button>
-          </div>
+        <p className="text-ink-soft mt-3 text-lg">
+          Handpicked just for you
+        </p>
+      </div>
 
-          <div className="rounded-3xl border-2 border-dashed border-card-line bg-card h-[450px] flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-gold-light mx-auto flex items-center justify-center mb-6">
-                <span className="text-4xl">🛍️</span>
-              </div>
+      <Link
+        to="/shop"
+        className="text-indigo-600 font-semibold hover:text-indigo-700 transition"
+      >
+        View All →
+      </Link>
+    </div>
 
-              <h3 className="text-2xl font-semibold text-ink-soft">
-                Featured Products Placeholder
-              </h3>
+    {loading ? (
+      <p className="text-center py-10">Loading...</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredProducts.map((product) => {
+          const productId = product._id || product.id;
 
-              <p className="text-ink-faint mt-3">
-                This section will be implemented later.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+          return (
+            <ProductCard
+              key={productId}
+              product={product}
+              isWishlisted={wishlistedIds.includes(productId)}
+              isAddingToCart={addingProductId === productId}
+              onToggleWishlist={() => handleToggleWishlist(productId)}
+              onAddToCart={() => handleAddToCart(productId)}
+            />
+          );
+        })}
+      </div>
+    )}
 
-      {/* ================= HOW IT WORKS ================= */}
+  </div>
+</section>
 
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-ink">How It Works</h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto rounded-3xl bg-gold-light flex items-center justify-center mb-8">
-                <FaShoppingBag className="text-4xl text-gold-deep" />
-              </div>
-
-              <h3 className="text-3xl font-semibold text-ink">
-                Browse Products
-              </h3>
-
-              <p className="text-ink-soft text-lg mt-4 leading-8 max-w-sm mx-auto">
-                Explore our wide range of premium products.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto rounded-3xl bg-gold-light flex items-center justify-center mb-8">
-                <FaShoppingCart className="text-4xl text-gold-deep" />
-              </div>
-
-              <h3 className="text-3xl font-semibold text-ink">Add to Cart</h3>
-
-              <p className="text-ink-soft text-lg mt-4 leading-8 max-w-sm mx-auto">
-                Select your favorites and add them to your shopping cart.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto rounded-3xl bg-gold-light flex items-center justify-center mb-8">
-                <FaTruck className="text-4xl text-gold-deep" />
-              </div>
-
-              <h3 className="text-3xl font-semibold text-ink">
-                Order & Receive
-              </h3>
-
-              <p className="text-ink-soft text-lg mt-4 leading-8 max-w-sm mx-auto">
-                Place your order and get it delivered safely to your doorstep.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ================= NEWSLETTER ================= */}
 
@@ -237,6 +227,7 @@ function Home() {
         </div>
       </section>
     </>
+         
   );
 }
 

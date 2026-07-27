@@ -55,11 +55,13 @@ export function useProducts() {
       };
 
       const res = await api.get("/products", { params });
-
+      console.log(res.data);
+      console.log(res.data.products);
       if (res.data?.success) {
         const fetched = res.data.products || [];
 
         setProducts((prev) => (append ? [...prev, ...fetched] : fetched));
+        console.log("Fetched:", fetched);
         setTotalPages(res.data.totalPages || 1);
         setPage(pageToFetch);
 
