@@ -16,6 +16,17 @@ import {
 } from "react-icons/fa";
 import { IoSparklesOutline } from "react-icons/io5";
 
+import { useEffect, useState } from "react";
+import api from "../api/axios";
+import Skeleton from "../components/ui/Skeleton";
+
+const CATEGORIES = [
+  { key: "electronics", label: "Electronics", icon: FaLaptop },
+  { key: "fashion", label: "Fashion", icon: FaTshirt },
+  { key: "home", label: "Home", icon: FaHome },
+  { key: "accessories", label: "Accessories", icon: FaHeadphones },
+];
+
 function Home() {
   const {
     products,
@@ -25,6 +36,38 @@ function Home() {
     handleAddToCart,
     handleToggleWishlist,
   } = useProducts();
+  
+  const links = ["Shop", "My Orders", "Wishlist", "Profile"];
+
+  const [categoryCounts, setCategoryCounts] = useState({});
+  const [countsLoading, setCountsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategoryCounts = async () => {
+      try {
+        setCountsLoading(true);
+
+        const results = await Promise.all(
+          CATEGORIES.map((cat) =>
+            api.get("/products", { params: { category: cat.key, limit: 1 } }),
+          ),
+        );
+
+        const counts = {};
+        results.forEach((res, i) => {
+          counts[CATEGORIES[i].key] = res.data?.totalProducts ?? 0;
+        });
+
+        setCategoryCounts(counts);
+      } catch (err) {
+        console.error("Failed to fetch category counts:", err);
+      } finally {
+        setCountsLoading(false);
+      }
+    };
+
+    fetchCategoryCounts();
+  }, []);
 
   return (
     <>
@@ -80,53 +123,27 @@ function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-            {/* Electronics */}
-
-            <div className="bg-card border border-card-line rounded-2xl p-6 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-              <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
-                <FaLaptop />
-              </div>
-
-              <h3 className="text-2xl font-semibold text-ink">Electronics</h3>
-
-              <p className="text-ink-soft mt-3">120 Products</p>
-            </div>
-
-            {/* Fashion */}
-
-            <div className="bg-card border border-card-line rounded-2xl p-6 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-              <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
-                <FaTshirt />
-              </div>
-
-              <h3 className="text-2xl font-semibold text-ink">Fashion</h3>
-
-              <p className="text-ink-soft mt-3">95 Products</p>
-            </div>
-
-            {/* Home */}
-
-            <div className="bg-card border border-card-line rounded-2xl p-6 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-              <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
-                <FaHome />
-              </div>
-
-              <h3 className="text-2xl font-semibold text-ink">Home</h3>
-
-              <p className="text-ink-soft mt-3">80 Products</p>
-            </div>
-
-            {/* Accessories */}
-
-            <div className="bg-card border border-card-line rounded-2xl p-6 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-              <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
-                <FaHeadphones />
-              </div>
-
-              <h3 className="text-2xl font-semibold text-ink">Accessories</h3>
-
-              <p className="text-ink-soft mt-3">60 Products</p>
-            </div>
+            {CATEGORIES.map(({ key, label, icon: Icon }) => (
+              <Link
+                key={key}
+                to={`/shop?category=${key}`}
+                className="bg-card border border-card-line rounded-2xl p-8 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer block"
+              >
+                <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
+                  <Icon />
+                </div>
+                <h3 className="text-2xl font-semibold text-ink">{label}</h3>
+                {countsLoading ? (
+                  <div className="flex justify-center mt-3">
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                ) : (
+                  <p className="text-ink-soft mt-3">
+                    {categoryCounts[key] ?? 0} Products
+                  </p>
+                )}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

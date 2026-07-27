@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import api from "../api/axios";
 import { useCart } from "../context/CartContext";
-import {
-  showSuccessToast,
-  showErrorToast,
-  showInfoToast,
-} from "../utils/toastHelpers";
-import { PRODUCT_MESSAGES, PRODUCTS_PAGE_LIMIT } from "../constants";
+import { showSuccessToast, showErrorToast, showInfoToast } from "../utils/toastHelpers";
+import {PRODUCT_MESSAGES, PRODUCTS_PAGE_LIMIT} from "../constants"
+import { useSearchParams } from "react-router";
 
 export function useProducts() {
   const { addToCart } = useCart();
+  const [searchParams, setSearchParams] = useSearchParams();
+
 
   //Data state
   const [products, setProducts] = useState([]);
@@ -21,7 +20,7 @@ export function useProducts() {
 
   //Filters
   const [filters, setFilters] = useState({
-    category: "",
+    category: searchParams.get("category") || "",
     minPrice: "",
     maxPrice: "",
     sort: "",
@@ -131,6 +130,15 @@ export function useProducts() {
 
   const handleCategoryChange = (category) => {
     setFilters((prev) => ({ ...prev, category }));
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if(category){
+        next.set("category", category)
+      } else {
+        next.delete("category")
+      }
+      return next;
+    })
   };
 
   const handleMinPriceChange = (minPrice) => {
@@ -148,13 +156,12 @@ export function useProducts() {
   const handleClearFilters = () => {
     setPriceDraft({ minPrice: "", maxPrice: "" });
     setSearchTerm("");
-    setFilters({
-      category: "",
-      minPrice: "",
-      maxPrice: "",
-      sort: "",
-      search: "",
-    });
+    setFilters({ category: "", minPrice: "", maxPrice: "", sort: "", search: "" });
+    setSearchParams((prev) => {
+    const next = new URLSearchParams(prev);
+    next.delete("category");
+    return next;
+  });
   };
 
   const removeFilter = (key) => {
@@ -163,6 +170,14 @@ export function useProducts() {
     }
     if (key === "search") {
       setSearchTerm("");
+    }
+    setFilters((prev) => ({ ...prev, [key]: "" }));
+    if (key === "category") {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("category");
+        return next;
+      });
     }
     setFilters((prev) => ({ ...prev, [key]: "" }));
   };

@@ -6,12 +6,14 @@ import SearchInput from "../components/ui/SearchInput";
 import ProductCardSkeleton from "../components/products/ProductCardSkeleton";
 import ErrorState from "../components/ui/ErrorState";
 import EmptyState from "../components/ui/EmptyState";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActiveFilters from "../components/products/ActiveFilters";
 import Button from "../components/ui/Button";
+import { useSearchParams } from "react-router";
 
 function Shop() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const {
     products,
@@ -38,8 +40,16 @@ function Shop() {
     handleToggleWishlist,
   } = useProducts();
 
+  useEffect(() => {
+    const search = searchParams.get("search");
+    if (search) {
+      setSearchTerm(search);
+      handleSearch(search);
+    }
+  }, []);
+
   return (
-    <div className="w-full text-ink min-h-screen">
+    <div className="mt-18 w-full text-ink min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center gap-2 sm:gap-3 mb-6">
           <SearchInput
