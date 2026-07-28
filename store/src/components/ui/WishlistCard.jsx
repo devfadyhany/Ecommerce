@@ -4,17 +4,27 @@ import api from "../../api/axios";
 import { showErrorToast, showSuccessToast } from "../../utils/toastHelpers";
 import { FaShoppingCart } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
+import { useCart } from "../../context/CartContext";
 
-function WishlistCard({ img, title, description, price, discountPrice, id }) {
+function WishlistCard({
+  img,
+  title,
+  description,
+  price,
+  discountPrice,
+  id,
+  deletedata,
+}) {
   const [loading, setLoading] = useState(false);
+  const { addToCart } = useCart();
 
   const addcard = async (id) => {
     try {
-      const res = await api.post(`/wishlists/add/${id}`);
-      await showSuccessToast("Success add card");
       setLoading(true);
+      await addToCart(id);
+      showSuccessToast("Added to cart");
     } catch (err) {
-      showErrorToast("Failed to add card");
+      showErrorToast("Failed to add to cart");
     } finally {
       setLoading(false);
     }
@@ -22,8 +32,7 @@ function WishlistCard({ img, title, description, price, discountPrice, id }) {
 
   const delcard = async (id) => {
     try {
-      const res = await api.delete(`/wishlists/remove/${id}`);
-      await showSuccessToast("Success delete card");
+      await deletedata(id);
     } catch (err) {
       showErrorToast("Failed to delete card");
     }
@@ -55,21 +64,18 @@ function WishlistCard({ img, title, description, price, discountPrice, id }) {
           <span className="text-xl font-extrabold text-[var(--sef-gold-primary)]">
             EGP {discountPrice ? discountPrice : price}
           </span>
-          {discountPrice ? (
+          {discountPrice > 0 && (
             <del className="text-sm text-[var(--sef-text-fields)]">
               EGP {price}
             </del>
-          ) : (
-            ""
           )}
         </div>
 
         <div className="flex items-center gap-2 pt-2">
           <button
             className="inline-flex flex-1 items-center justify-center py-2.5 px-4 rounded-xl font-medium transition-all duration-300 text-[var(--sef-text-secondary)] bg-[image:var(--sef-gradient-gold-subtle)] border border-[var(--sef-border-color)] hover:opacity-90 active:scale-95 shadow-sm"
-            onClick={() => {
-              addcard(id);
-            }}
+            onClick={() => addcard(id)}
+            disabled={loading}
           >
             {loading ? (
               <ImSpinner2 size={20} className="animate-spin" />
@@ -84,9 +90,7 @@ function WishlistCard({ img, title, description, price, discountPrice, id }) {
           <button
             className="p-2.5 rounded-xl border transition-all duration-300 text-[var(--sef-text-secondary)] border-[var(--sef-card-border)] hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 active:scale-95"
             title="Delete item"
-            onClick={() => {
-              delcard(id);
-            }}
+            onClick={() => deletedata(id)}
           >
             <MdDelete size={22} />
           </button>

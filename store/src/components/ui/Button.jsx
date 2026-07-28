@@ -15,10 +15,10 @@ const SIZE_CLASSES = {
 };
 
 const SPINNER_BORDER_BY_VARIANT = {
-  primary: "border-white border-t-transparent",
-  outline: "border-gold border-t-transparent",
-  danger: "border-white border-t-transparent",
-  ghost: "border-ink-soft border-t-transparent",
+  primary: "border-t-2 border-b-2 border-gold", 
+  outline: "border-t-2 border-b-2 border-gold",
+  danger: "border-t-2 border-b-2 border-gold",
+  ghost: "border-t-2 border-b-2 border-gold",
 };
 
 const Button = ({
@@ -55,7 +55,7 @@ const Button = ({
       {isLoading ? (
         <>
           <div
-            className={`animate-spin rounded-full h-4 w-4 border-2 ${SPINNER_BORDER_BY_VARIANT[variant]}`}
+            className={`animate-spin rounded-full h-4 w-4 ${SPINNER_BORDER_BY_VARIANT[variant]}`}
           />
           {loadingText}
         </>
