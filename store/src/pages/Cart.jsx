@@ -3,8 +3,10 @@ import { Link } from "react-router";
 import api from "../api/axios";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { useCart } from "../context/CartContext";
+import { Navigate , useNavigate } from "react-router-dom";
 
 function Cart() {
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -49,7 +51,7 @@ function Cart() {
       }
     }
   };
-
+  
   if (loading) {
     return <LoadingSpinner label="Loading cart..." />;
   }
@@ -245,7 +247,9 @@ function Cart() {
               </span>
             </div>
 
-            <button className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2 flex items-center justify-center gap-2">
+            <button className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2"
+              onClick={() => navigate("/checkout")}
+            >
               Proceed to Checkout
             </button>
           </div>
