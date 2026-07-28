@@ -14,6 +14,8 @@ import Wishlist from "../pages/Wishlist";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
 import OrderDetails from "../pages/OrderDetails";
+import Checkout from "../pages/Checkout";
+import OrderSuccess from "../pages/OrderSuccess";
 
 function AppRouter() {
   return (
@@ -47,6 +49,8 @@ function AppRouter() {
           </Route>
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 

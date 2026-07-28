@@ -2,6 +2,7 @@
 // import iphone from "../assets/images/iphone.png";
 import { useState } from "react";
 import { Link } from "react-router";
+import { Navigate , useNavigate } from "react-router-dom";
 const data = [
   {
     id: 1,
@@ -61,6 +62,9 @@ function Cart() {
       alert("Invalid Coupon");
     }
   };
+
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-surface-soft py-8">
       <div className="max-w-7xl mx-auto px-4">
@@ -217,7 +221,9 @@ function Cart() {
               </span>
             </div>
 
-            <button className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2">
+            <button className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2"
+              onClick={() => navigate("/checkout")}
+            >
               Proceed to Checkout
             </button>
             <Link
