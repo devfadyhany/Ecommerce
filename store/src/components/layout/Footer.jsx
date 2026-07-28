@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { FaBolt, FaGlobe, FaRegCommentDots, FaRegHeart } from "react-icons/fa";
+import { useState } from "react";
+import { FaGlobe, FaRegCommentDots, FaRegHeart } from "react-icons/fa";
 import { useTheme } from "../../context/ThemeContext";
 
 import Logo from "../../assets/logo.png";
 import LogoDark from "../../assets/logo-dark.png";
 
+import { useNavigate } from "react-router-dom";
+
 function Footer() {
-  const [active, setActive] = useState("Profile");
+  const [active, setActive] = useState("");
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <footer className="bg-layout border-t border-card-line">
@@ -37,9 +40,12 @@ function Footer() {
 
             <div className="flex flex-col gap-2 justify-center items-start">
               <button
-                onClick={() => setActive("Shop")}
+                onClick={() => {
+                  setActive("Shop");
+                  navigate("/shop");
+                }}
                 className={
-                  active === "Shop"
+                  active === "/Shop"
                     ? "text-gold text-lg font-medium transition"
                     : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
@@ -48,9 +54,12 @@ function Footer() {
               </button>
 
               <button
-                onClick={() => setActive("Orders")}
+                onClick={() => {
+                  setActive("Orders");
+                  navigate("/orders");
+                }}
                 className={
-                  active === "Orders"
+                  active === "/Orders"
                     ? "text-gold text-lg font-medium transition"
                     : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
@@ -59,9 +68,12 @@ function Footer() {
               </button>
 
               <button
-                onClick={() => setActive("Wishlist")}
+                onClick={() => {
+                  setActive("Wishlist");
+                  navigate("/wishlist");
+                }}
                 className={
-                  active === "Wishlist"
+                  active === "/Wishlist"
                     ? "text-gold text-lg font-medium  transition"
                     : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }
@@ -70,9 +82,12 @@ function Footer() {
               </button>
 
               <button
-                onClick={() => setActive("Profile")}
+                onClick={() => {
+                  setActive("Profile");
+                  navigate("/profile");
+                }}
                 className={
-                  active === "Profile"
+                  active === "/Profile"
                     ? "text-gold text-lg font-medium transition"
                     : "text-ink-soft text-lg font-medium hover:text-gold transition"
                 }

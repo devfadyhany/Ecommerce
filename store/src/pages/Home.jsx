@@ -1,6 +1,6 @@
 import { useProducts } from "../hooks/useProducts";
 import ProductCard from "../components/products/ProductCard";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import {
   FaHeart,
   FaRegHeart,
@@ -28,6 +28,7 @@ const CATEGORIES = [
 ];
 
 function Home() {
+  const navigate = useNavigate();
   const {
     products,
     loading,
@@ -41,6 +42,7 @@ function Home() {
 
   const [categoryCounts, setCategoryCounts] = useState({});
   const [countsLoading, setCountsLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchCategoryCounts = async () => {
@@ -97,11 +99,16 @@ function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-5 mt-12">
-                <button className="bg-card text-gold font-semibold px-7 py-3.5 rounded-xl shadow-xl hover:scale-105 transition duration-300">
+                <button onClick={() => navigate("/shop")} className="bg-card text-gold font-semibold px-7 py-3.5 rounded-xl shadow-xl hover:scale-105 transition duration-300">
                   Shop Now
                 </button>
 
-                <button className="border border-on-gold/40 text-on-gold px-7 py-3.5 rounded-xl hover:bg-card hover:text-gold transition duration-300">
+                <button
+                  onClick={() =>
+                    document.getElementById("categories")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="border border-on-gold/40 text-on-gold px-7 py-3.5 rounded-xl hover:bg-card hover:text-gold transition duration-300"
+                >
                   View Categories
                 </button>
               </div>
@@ -112,7 +119,7 @@ function Home() {
 
       {/* ================= CATEGORIES SECTION ================= */}
 
-      <section className="py-20">
+      <section id="categories" className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-ink">Shop By Category</h2>
@@ -169,7 +176,7 @@ function Home() {
           </div>
 
           {loading ? (
-            <p className="text-center py-10 text-ink-soft">Loading...</p>
+            <p className="text-center py-10 text-ink-soft ">Loading...</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {products.map((product) => {
