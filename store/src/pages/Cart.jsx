@@ -1,21 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
-import api from "../api/axios";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { useCart } from "../context/CartContext";
-import { Navigate , useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
+import { RiDeleteBinLine } from "react-icons/ri";
 
 function Cart() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [couponMessage, setCouponMessage] = useState("");
+  const [activeCoupon, setActiveCoupon] = useState("");
   const {
     cart,
     loading,
     updateQuantity,
     removeFromCart,
     applyCoupon: applyCouponContext,
+    removeCoupon: removeCouponContext,
   } = useCart();
 
   const cartItems = cart?.items || [];
@@ -27,7 +31,9 @@ function Cart() {
   );
   const shipping = subtotal > 1000 ? 0 : 50;
   const tax = subtotal * 0.14;
-  const total = subtotal + shipping + tax - discount;
+  const activeDiscount = Number(cart?.discountAmount ?? discount);
+  const total = Number(cart?.total ?? subtotal + shipping + tax - activeDiscount);
+  const couponCode = cart?.coupon || activeCoupon;
 
   const increaseQuantity = (productId, quantity) => {
     updateQuantity(productId, quantity + 1);
@@ -43,12 +49,56 @@ function Cart() {
     removeFromCart(id);
   };
 
-  const applyCoupon = () => {
-    if (coupon.trim()) {
-      applyCouponContext(coupon);
-      if (coupon.trim().toUpperCase() === "DATA1") {
-        setDiscount(subtotal * 0.1);
+  const applyCoupon = async () => {
+    const normalizedCoupon = coupon.trim().toUpperCase();
+
+    if (!normalizedCoupon) {
+      setCouponMessage("Pleare write the coupon");
+      setDiscount(0);
+      setActiveCoupon("");
+      return;
+    }
+
+    try {
+      const response = await applyCouponContext(normalizedCoupon);
+      const appliedDiscount = Number(response?.discountAmount ?? 0);
+      const appliedCoupon = response?.coupon || normalizedCoupon;
+
+      if (response?.success && appliedDiscount > 0) {
+        setDiscount(appliedDiscount);
+        setActiveCoupon(appliedCoupon);
+        setCouponMessage("Coupon is applied");
+        showSuccessToast("Coupon is applied");
+      } else {
+        setDiscount(0);
+        setActiveCoupon("");
+        const errorMessage = response?.message || "Coupon is invalid";
+        setCouponMessage(errorMessage);
+        showErrorToast(errorMessage);
       }
+    } catch (err) {
+      const errorMessage = err?.response?.data?.message || "Coupon is invaled";
+      setDiscount(0);
+      setActiveCoupon("");
+      setCouponMessage(errorMessage);
+      showErrorToast(errorMessage);
+    }
+  };
+
+  const handleRemoveCoupon = async () => {
+    try {
+      const response = await removeCouponContext();
+
+      if (response?.success) {
+        setDiscount(0);
+        setActiveCoupon("");
+        setCouponMessage("Coupon removed");
+        showSuccessToast("Coupon removed");
+      }
+    } catch (err) {
+      const errorMessage = err?.response?.data?.message || "Failed to remove coupon";
+      setCouponMessage(errorMessage);
+      showErrorToast(errorMessage);
     }
   };
   
@@ -196,6 +246,18 @@ function Cart() {
                   Apply
                 </button>
               </div>
+
+              {couponMessage && (
+                <div
+                  className={`mt-3 rounded-lg border px-3 py-2 text-sm ${
+                    discount > 0
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                      : "border-red-400 bg-red-50 text-red-600"
+                  }`}
+                >
+                  {couponMessage}
+                </div>
+              )}
             </div>
             <Link
               to="/shop"
@@ -231,11 +293,26 @@ function Cart() {
               </div>
             </div>
 
-            {discount > 0 && (
-              <div className="flex justify-between text-ink-soft pt-4">
+            {couponCode && (
+              <div className="flex justify-between items-center text-ink-soft pt-4">
+                <span>Coupon</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-emerald-600">{couponCode}</span>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="flex gap-1 text-xs text-red-500 hover:underline"
+                  >
+                    <RiDeleteBinLine /> Remove
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeDiscount > 0 && (
+              <div className="flex justify-between text-ink-soft pt-2">
                 <span>Discount</span>
                 <span className="text-emerald-600">
-                  -EGP {discount.toFixed(2)}
+                  -EGP {activeDiscount.toFixed(2)}
                 </span>
               </div>
             )}

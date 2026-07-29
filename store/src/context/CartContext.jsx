@@ -111,21 +111,52 @@ export function CartProvider({ children }) {
 
   const applyCoupon = async (code) => {
     try {
-      await api.post("/carts/coupon", {
+      const res = await api.post("/carts/coupon", {
         code,
       });
-      getCart();
+
+      if (res?.data?.success) {
+        setCart((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...res.data,
+                items: prev.items || [],
+              }
+            : res.data,
+        );
+      }
+
+      return res?.data;
     } catch (err) {
       console.error(err);
+      throw err;
     }
   };
 
   const removeCoupon = async () => {
     try {
-      await api.delete("/carts/coupon");
-      getCart();
+      const res = await api.delete("/carts/coupon");
+
+      if (res?.data?.success) {
+        setCart((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...res.data,
+                coupon: undefined,
+                discountAmount: 0,
+                total: res.data.total ?? prev.total,
+                items: prev.items || [],
+              }
+            : res.data,
+        );
+      }
+
+      return res?.data;
     } catch (err) {
       console.error(err);
+      throw err;
     }
   };
 
