@@ -2,6 +2,17 @@
 
 SEF Academy Training Project — a front-end e-commerce project split into two independent React apps: a customer-facing **store** and **admin dashboard**.
 
+## Live Links
+
+<ul>
+  <li>
+    <a href="https://elite-cart-admin.vercel.app">Admin Dashboard</a><br/>
+  </li>
+  <li>
+    <a href="https://elite-cart-alpha.vercel.app">Store</a>
+  </li>
+</ul>
+
 ## Repository Structure
 
 ```
