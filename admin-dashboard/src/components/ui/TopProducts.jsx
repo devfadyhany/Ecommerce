@@ -11,6 +11,12 @@ const TopProducts = React.memo(({ products = [] }) => {
         <h2 className="mt-2 text-xl font-medium text-ink">Best Sellers</h2>
       </div>
 
+      {products.length === 0 && (
+        <div className="mt-6 flex justify-center items-center h-32">
+          <p className="text-ink-soft">No top products data available.</p>
+        </div>
+      )}
+
       <div className="mt-6 space-y-4">
         {products.map((product) => (
           <div

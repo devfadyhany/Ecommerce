@@ -1,18 +1,12 @@
 import { useProducts } from "../hooks/useProducts";
 import ProductCard from "../components/products/ProductCard";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  FaHeart,
-  FaRegHeart,
-  FaStar,
-  FaShoppingCart,
-  FaLaptop,
-  FaTshirt,
-  FaHome,
-  FaHeadphones,
   FaShoppingBag,
+  FaShoppingCart,
   FaTruck,
   FaEnvelope,
+  FaTag,
 } from "react-icons/fa";
 import { IoSparklesOutline } from "react-icons/io5";
 
@@ -20,12 +14,13 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import Skeleton from "../components/ui/Skeleton";
 
-const CATEGORIES = [
-  { key: "electronics", label: "Electronics", icon: FaLaptop },
-  { key: "fashion", label: "Fashion", icon: FaTshirt },
-  { key: "home", label: "Home", icon: FaHome },
-  { key: "accessories", label: "Accessories", icon: FaHeadphones },
-];
+import { CATEGORY_ICONS } from "../constants";
+
+const getCategoryIcon = (key) =>
+  CATEGORY_ICONS[key] ?? CATEGORY_ICONS[key.replace(/\s+/g, "-")] ?? FaTag;
+
+const formatLabel = (key) =>
+  key.charAt(0).toUpperCase() + key.slice(1).replace(/[-_]/g, " ");
 
 function Home() {
   const navigate = useNavigate();
@@ -37,38 +32,42 @@ function Home() {
     handleAddToCart,
     handleToggleWishlist,
   } = useProducts();
-  
-  const links = ["Shop", "My Orders", "Wishlist", "Profile"];
 
-  const [categoryCounts, setCategoryCounts] = useState({});
+  // const links = ["Shop", "My Orders", "Wishlist", "Profile"];
+
+  const [categories, setCategories] = useState([]);
   const [countsLoading, setCountsLoading] = useState(true);
 
-
   useEffect(() => {
-    const fetchCategoryCounts = async () => {
+    const fetchCategories = async () => {
       try {
         setCountsLoading(true);
 
-        const results = await Promise.all(
-          CATEGORIES.map((cat) =>
-            api.get("/products", { params: { category: cat.key, limit: 1 } }),
-          ),
+        const res = await api.get("/products", { params: { limit: 1000 } });
+        const list = res.data?.products ?? res.data ?? [];
+
+        const counts = list.reduce((acc, product) => {
+          const key = product.category?.toLowerCase();
+          if (!key) return acc;
+          acc[key] = (acc[key] || 0) + 1;
+          return acc;
+        }, {});
+
+        setCategories(
+          Object.entries(counts).map(([key, count]) => ({
+            key,
+            label: formatLabel(key),
+            count,
+          })),
         );
-
-        const counts = {};
-        results.forEach((res, i) => {
-          counts[CATEGORIES[i].key] = res.data?.totalProducts ?? 0;
-        });
-
-        setCategoryCounts(counts);
       } catch (err) {
-        console.error("Failed to fetch category counts:", err);
+        console.error("Failed to fetch categories:", err);
       } finally {
         setCountsLoading(false);
       }
     };
 
-    fetchCategoryCounts();
+    fetchCategories();
   }, []);
 
   return (
@@ -99,15 +98,20 @@ function Home() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-5 mt-12">
-                <button onClick={() => navigate("/shop")} className="bg-card text-gold font-semibold px-7 py-3.5 rounded-xl shadow-xl hover:scale-105 transition duration-300">
+                <button
+                  onClick={() => navigate("/shop")}
+                  className="bg-white/80 text-gold font-semibold px-7 py-3.5 rounded-xl shadow-xl hover:scale-105 transition duration-300"
+                >
                   Shop Now
                 </button>
 
                 <button
                   onClick={() =>
-                    document.getElementById("categories")?.scrollIntoView({ behavior: "smooth" })
+                    document
+                      .getElementById("categories")
+                      ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="border border-on-gold/40 text-on-gold px-7 py-3.5 rounded-xl hover:bg-card hover:text-gold transition duration-300"
+                  className="border border-white/40 text-white px-7 py-3.5 rounded-xl hover:bg-white/80 hover:text-gold transition duration-300"
                 >
                   View Categories
                 </button>
@@ -130,27 +134,36 @@ function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-            {CATEGORIES.map(({ key, label, icon: Icon }) => (
-              <Link
-                key={key}
-                to={`/shop?category=${key}`}
-                className="bg-card border border-card-line rounded-2xl p-8 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer block"
-              >
-                <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
-                  <Icon />
-                </div>
-                <h3 className="text-2xl font-semibold text-ink">{label}</h3>
-                {countsLoading ? (
-                  <div className="flex justify-center mt-3">
-                    <Skeleton className="h-4 w-20" />
+            {countsLoading
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-card border border-card-line rounded-2xl p-8 flex flex-col items-center"
+                  >
+                    <Skeleton className="w-20 h-20 rounded-full mb-6" />
+                    <Skeleton className="h-6 w-28" />
+                    <Skeleton className="h-4 w-20 mt-3" />
                   </div>
-                ) : (
-                  <p className="text-ink-soft mt-3">
-                    {categoryCounts[key] ?? 0} Products
-                  </p>
-                )}
-              </Link>
-            ))}
+                ))
+              : categories.map(({ key, label, count }) => {
+                  const Icon = getCategoryIcon(key);
+
+                  return (
+                    <Link
+                      key={key}
+                      to={`/shop?category=${key}`}
+                      className="bg-card border border-card-line rounded-2xl p-8 text-center shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer block"
+                    >
+                      <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-light text-gold-deep text-4xl mb-6">
+                        <Icon />
+                      </div>
+                      <h3 className="text-2xl font-semibold text-ink">
+                        {label}
+                      </h3>
+                      <p className="text-ink-soft mt-3">{count} Products</p>
+                    </Link>
+                  );
+                })}
           </div>
         </div>
       </section>
@@ -259,15 +272,15 @@ function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-[image:var(--sef-gradient-gold-deep)] rounded-[24px] px-6 py-12 text-center">
             {/* Icon */}
-            <div className="w-16 h-16 mx-auto mb-5 rounded-full border border-on-gold/20 flex items-center justify-center">
-              <FaEnvelope className="text-on-gold text-3xl" />
+            <div className="w-16 h-16 mx-auto mb-5 rounded-full border border-white/20 flex items-center justify-center">
+              <FaEnvelope className="text-white text-3xl" />
             </div>
 
             {/* Title */}
-            <h2 className="text-4xl font-bold text-on-gold">Stay Updated</h2>
+            <h2 className="text-4xl font-bold text-white">Stay Updated</h2>
 
             {/* Description */}
-            <p className="text-on-gold/80 text-lg mt-4 max-w-xl mx-auto">
+            <p className="text-white/80 text-lg mt-4 max-w-xl mx-auto">
               Subscribe to our newsletter and get exclusive deals and new
               arrivals first.
             </p>
@@ -277,10 +290,10 @@ function Home() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full sm:w-[380px] h-14 rounded-xl px-5 bg-black/20 border border-on-gold/20 text-on-gold placeholder:text-on-gold/60 outline-none focus:border-on-gold"
+                className="w-full sm:w-[380px] h-14 rounded-xl px-5 bg-black/20 border border-white/20 text-white placeholder:text-white/60 outline-none focus:border-white"
               />
 
-              <button className="h-14 px-8 rounded-xl bg-card text-gold-deep font-semibold text-base hover:bg-surface-fields transition duration-300">
+              <button className="h-14 px-8 rounded-xl bg-white/80 text-gold-deep font-semibold text-base hover:scale-105 transition duration-300">
                 Subscribe
               </button>
             </div>

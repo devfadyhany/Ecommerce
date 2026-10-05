@@ -15,6 +15,7 @@
   --sef-card-border: #e2e8f0;
   --sef-card-shadow: 0 4px 16px rgba(191, 149, 63, 0.08);
   --sef-card-hover-shadow: 0 8px 24px rgba(191, 149, 63, 0.14);
+  --sef-card-login-shadow: 0 4px 16px rgba(191, 149, 63, 0.08);
 
   --sef-layout-bg: #ffffff;
   --sef-sidebar-bg: #fbf6ec;
@@ -65,8 +66,9 @@
 
   --sef-card-bg: #1e1a16;
   --sef-card-border: #3a3020;
-  --sef-card-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
-  --sef-card-hover-shadow: 0 8px 28px rgba(212, 175, 55, 0.25);
+  --sef-card-shadow: 0 4px 0px rgba(212, 175, 55, 0);
+  --sef-card-hover-shadow: 0 4px 8px rgba(212, 175, 55, 0.25);
+  --sef-card-login-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
 
   --sef-layout-bg: #17140f;
   --sef-sidebar-bg: #1a1611;
@@ -191,6 +193,10 @@ button {
   box-shadow: var(--sef-card-shadow);
 }
 
+.bg-card:hover {
+  box-shadow: var(--sef-card-hover-shadow);
+}
+
 .card {
   background-color: var(--sef-card-bg);
   padding: 24px 30px;
@@ -231,7 +237,7 @@ button {
 
 .login-container {
   animation: login 0.7s;
-  box-shadow: var(--sef-card-shadow);
+  box-shadow: var(--sef-card-login-shadow);
   border-radius: 24px;
 }
 

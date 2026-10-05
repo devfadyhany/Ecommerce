@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import dayjs from "dayjs";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
@@ -6,6 +6,15 @@ import EditUserModal from "../components/ui/EditUserModal";
 
 function Profile() {
   const { user, loading, refreshUser } = useAuth();
+
+  useEffect(() => {
+    async function getUser() {
+      await refreshUser();
+    }
+
+    getUser();
+  }, [user]);
+
   const [openEdit, setOpenEdit] = useState(false);
 
   const numericDate = dayjs(user?.updatedAt);

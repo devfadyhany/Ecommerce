@@ -11,20 +11,17 @@ import {
 } from "recharts";
 
 const RevenueChart = React.memo(({ revenue }) => {
-  // for testing the rechart if revenue in Api less than 2 days
-  const mockRevenue = [
-    { _id: "2026-07-05", revenue: 900, orders: 2 },
-    { _id: "2026-07-06", revenue: 1200, orders: 3 },
-    { _id: "2026-07-07", revenue: 1800, orders: 5 },
-    { _id: "2026-07-08", revenue: 1500, orders: 4 },
-    { _id: "2026-07-09", revenue: 2500, orders: 7 },
-    { _id: "2026-07-10", revenue: 2100, orders: 6 },
-    { _id: "2026-07-11", revenue: 620, orders: 1 },
-  ];
+  if (!revenue || revenue.length === 0) {
+    return (
+      <div className="h-80 w-full py-5 bg-card rounded-2xl shadow-lg p-6 border border-card-line">
+        <div className="flex justify-center items-center h-full">
+          <p className="text-ink-soft">No revenue data available.</p>
+        </div>
+      </div>
+    );
+  }
 
-  const chartData = revenue?.length > 1 ? revenue : mockRevenue;
-
-  //   console.log(revenue);
+  const chartData = revenue;
 
   return (
     <div className="h-80 w-full py-5 bg-card rounded-2xl shadow-lg p-6 border border-card-line">

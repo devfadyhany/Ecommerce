@@ -7,11 +7,9 @@ import TopProducts from "../components/ui/TopProducts";
 import RevenueChart from "../components/ui/RevenueChart";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import api from "../api/axios";
-import { getLast7DaysRevenue } from "../utils/getRevenueByDay";
 
 function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
-  const [revenue, setRevenue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,27 +26,8 @@ function Dashboard() {
     }
   }, []);
 
-  const fetchOrders = useCallback(async () => {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    const res = await api.get("/orders/admin", {
-      params: {
-        from: sevenDaysAgo.toISOString(),
-        limit: 7,
-      },
-    });
-
-    const revenueData = getLast7DaysRevenue(res.data.orders);
-    setRevenue(revenueData);
-  }, []);
-
   useEffect(() => {
     getDashboardData();
-  }, []);
-
-  useEffect(() => {
-    fetchOrders();
   }, []);
 
   return (
@@ -56,8 +35,31 @@ function Dashboard() {
       {loading ? (
         <LoadingSpinner />
       ) : error ? (
-        <div className="flex justify-center items-center h-screen text-rose-500">
-          {error}
+        <div className="space-y-6">
+          <HeaderCard
+            title1="ADMIN OVERVIEW"
+            title2="Real-time commerce health"
+            description="Monitor Your storefront with AI-style clarity and live API metrics."
+          />
+          <InfoSection dashboard={dashboard} />
+          <RevenueChart revenue={dashboard.dailyRevenue} />
+          {dashboard ? (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <OrderStatus stats={dashboard.orders} />
+                <TopProducts products={dashboard.topProducts} />
+              </div>
+              <RecentOrders orders={dashboard.recentOrders} />
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <OrderStatus />
+                <TopProducts />
+              </div>
+              <RecentOrders />
+            </>
+          )}
         </div>
       ) : (
         <div className="space-y-6">
@@ -67,7 +69,7 @@ function Dashboard() {
             description="Monitor Your storefront with AI-style clarity and live API metrics."
           />
           <InfoSection dashboard={dashboard} />
-          <RevenueChart revenue={revenue} />
+          <RevenueChart revenue={dashboard.dailyRevenue} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <OrderStatus stats={dashboard.orders} />
             <TopProducts products={dashboard.topProducts} />

@@ -25,7 +25,7 @@ export function useOrdersData({ page = 1, limit = 10, status, paymentStatus }) {
         const res = await api.get("/orders/admin", { params });
 
         setOrders(res.data.orders || []);
-        setTotal(res.data.total || 0);
+        setTotal(res.data.totalOrders || 0);
         setTotalPages(res.data.totalPages || 1);
       } catch (err) {
         console.error("Failed to fetch orders:", err);

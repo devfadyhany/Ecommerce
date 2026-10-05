@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { FiBell, FiMoon, FiLogOut, FiSun } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
@@ -8,9 +8,17 @@ import logoDark from "../../assets/logo-dark.png";
 
 const Navbar = ({ collapsed }) => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-  const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  const { user, logout, refreshUser } = useAuth();
+
+  useEffect(() => {
+    async function getUser() {
+      await refreshUser();
+    }
+
+    getUser();
+  }, []);
 
   return (
     <nav
@@ -32,12 +40,12 @@ const Navbar = ({ collapsed }) => {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <Link
+        {/* <Link
           to="/notifications"
           className="p-2 border border-line bg-layout rounded-xl text-ink-soft hover:bg-surface-fields"
         >
           <FiBell size={18} />
-        </Link>
+        </Link> */}
 
         <button
           onClick={toggleTheme}

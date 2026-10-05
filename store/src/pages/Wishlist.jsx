@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import WishlistCard from "../components/ui/WishlistCard";
 import WishlistSkeleton from "../components/ui/WishlistSkeleton";
 import { CiHeart } from "react-icons/ci";
@@ -7,8 +7,12 @@ import { useCart } from "../context/CartContext";
 import { showErrorToast, showSuccessToast } from "../utils/toastHelpers";
 
 function Wishlist() {
-  const { wishlist, setWishlist, removeFromWishlist } = useCart();
+  const { wishlist, getWishlist, setWishlist, removeFromWishlist } = useCart();
   const Navigate = useNavigate();
+
+  useEffect(() => {
+    getWishlist();
+  }, []);
 
   const loading = wishlist === null;
   const dataWishlist = wishlist?.wishlist?.products || [];
@@ -24,9 +28,9 @@ function Wishlist() {
 
     try {
       await removeFromWishlist(id);
-      showSuccessToast("Success delete card");
+      showSuccessToast("Item removed from wishlist successfully");
     } catch (err) {
-      showErrorToast("Failed to delete card");
+      showErrorToast("Failed to remove item from wishlist");
     }
   };
 

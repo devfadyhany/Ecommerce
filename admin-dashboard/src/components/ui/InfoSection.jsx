@@ -1,5 +1,4 @@
 import React from "react";
-import api from "../../api/axios";
 import InfoCard from "./InfoCard";
 
 import {
@@ -12,7 +11,21 @@ import {
 } from "react-icons/fa";
 
 const InfoSection = React.memo(({ dashboard }) => {
-  if (!dashboard) return null;
+  if (!dashboard) {
+    const noDataCard = {
+      title: "No Data",
+      value: "N/A",
+      subtitle: "No data available",
+      icon: <FaClock />,
+      color: "from-gray-400 to-gray-500",
+    };
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <InfoCard key="no-data" {...noDataCard} />
+      </div>
+    );
+  }
 
   const cards = [
     {

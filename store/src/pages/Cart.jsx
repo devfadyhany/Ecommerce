@@ -32,7 +32,9 @@ function Cart() {
   const shipping = subtotal > 1000 ? 0 : 50;
   const tax = subtotal * 0.14;
   const activeDiscount = Number(cart?.discountAmount ?? discount);
-  const total = Number(cart?.total ?? subtotal + shipping + tax - activeDiscount);
+  const total = Number(
+    cart?.total ?? subtotal + shipping + tax - activeDiscount,
+  );
   const couponCode = cart?.coupon || activeCoupon;
 
   const increaseQuantity = (productId, quantity) => {
@@ -96,12 +98,13 @@ function Cart() {
         showSuccessToast("Coupon removed");
       }
     } catch (err) {
-      const errorMessage = err?.response?.data?.message || "Failed to remove coupon";
+      const errorMessage =
+        err?.response?.data?.message || "Failed to remove coupon";
       setCouponMessage(errorMessage);
       showErrorToast(errorMessage);
     }
   };
-  
+
   if (loading) {
     return <LoadingSpinner label="Loading cart..." />;
   }
@@ -144,7 +147,7 @@ function Cart() {
                 </div>
               ) : (
                 cartItems.map((item) => {
-                  const itemId = item.product;
+                  const itemId = item.product.id;
                   const itemName = item.name || item.product?.name;
                   const itemPrice = item.price || item.product?.price || 0;
                   const itemImage = item.image || item.product?.image;
@@ -324,7 +327,8 @@ function Cart() {
               </span>
             </div>
 
-            <button className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2"
+            <button
+              className="w-full bg-gold text-on-gold py-3 rounded-xl hover:bg-gold-deep transition-colors font-bold text-l shadow-sm my-2"
               onClick={() => navigate("/checkout")}
             >
               Proceed to Checkout

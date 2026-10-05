@@ -197,7 +197,7 @@ const AddProduct = ({ isEditMode = false }) => {
           <button
             type="button"
             onClick={() => navigate("/products")}
-            className="flex items-center gap-2 px-4 py-1.5 bg-black/20 border border-black/10 rounded-full text-xs font-medium text-on-gold hover:bg-black/30 transition-all backdrop-blur-sm"
+            className="flex items-center gap-2 px-4 py-1.5 bg-black/20 border border-black/10 rounded-full text-xs font-medium text-white hover:bg-black/30 transition-all backdrop-blur-sm"
           >
             <ArrowLeft size={22} />
             Back to products
@@ -236,7 +236,7 @@ const AddProduct = ({ isEditMode = false }) => {
                 </h1>
               </div>
             </div>
-            <p className="text-sm text-on-gold/70 max-w-2xl leading-relaxed">
+            <p className="text-sm text-white/70 max-w-2xl leading-relaxed">
               {isEditMode
                 ? "Edit product information, update prices, adjust inventory stock, and manage galleries instantly."
                 : "Add products with validation, image previews, multi-upload support, and smooth UX."}
@@ -246,7 +246,7 @@ const AddProduct = ({ isEditMode = false }) => {
             <span className="text-[10px] text-gold-light font-bold tracking-[0.15em] uppercase">
               {isEditMode ? "STATUS" : "READY"}
             </span>
-            <span className="text-xs text-on-gold/80 mt-1.5 font-medium">
+            <span className="text-xs text-white/80 mt-1.5 font-medium">
               {isEditMode
                 ? "Editing current entry."
                 : "Create, validate, and save with one click."}

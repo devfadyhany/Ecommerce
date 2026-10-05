@@ -2,6 +2,7 @@ import { useState } from "react";
 import HeaderCard from "../components/ui/HeaderCard";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import { FaChevronDown } from "react-icons/fa";
 
 function Settings() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ function Settings() {
 
         <div className="flex flex-col mt-12 gap-6">
           <button
-            className="bg-gold p-3 text-xl text-on-gold text-left hover:bg-gold-deep rounded-xl transition-colors"
+            className="bg-card p-3 text-xl text-ink text-left hover:bg-gold-deep rounded-xl transition-colors"
             onClick={() => {
               navigate("/profile");
             }}
@@ -33,14 +34,14 @@ function Settings() {
           <div className="relative inline-block text-left w-full">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full bg-gold border border-gold-dark rounded-lg p-3 text-xl text-on-gold flex
+              className="w-full bg-card border border-gold-dark rounded-lg p-3 text-xl text-ink flex
           justify-between items-center shadow-md hover:bg-gold-deep transition-colors focus:outline-none"
             >
               {theme.charAt(0).toUpperCase() + theme.slice(1)}
               <span
                 className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
               >
-                ▼
+                <FaChevronDown size={18} />
               </span>
             </button>
 
@@ -59,7 +60,7 @@ function Settings() {
                     setTheme(option.toLowerCase());
                     setIsOpen(false);
                   }}
-                  className="w-full text-right px-4 py-2 text-xl text-ink-soft hover:bg-gold-light
+                  className="w-full text-left px-4 py-2 text-xl text-ink-soft hover:bg-gold-light
         hover:text-gold-deep font-bold transition-colors duration-200 block"
                 >
                   {option}

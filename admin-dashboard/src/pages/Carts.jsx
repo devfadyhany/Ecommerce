@@ -85,7 +85,20 @@ export default function Carts() {
   }, []);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <div className="text-center p-10 text-red-500">ERROR</div>;
+  if (error)
+    return (
+      <div className="p-6 bg-surface-soft min-h-screen">
+        <HeaderCard
+          title1="Carts"
+          title2="Cart overview"
+          description="All active carts returned from the API are rendered here with their latest item details."
+        />
+
+        <div className="text-center p-10 text-red-500">
+          Failed to load carts
+        </div>
+      </div>
+    );
 
   return (
     <div className="p-6 bg-surface-soft min-h-screen">

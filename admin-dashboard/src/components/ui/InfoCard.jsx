@@ -1,15 +1,28 @@
-import React from "react";
+function truncateAfterSpace(value, maxLength = 20) {
+  const text = String(value);
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  const truncated = text.slice(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(" ");
+
+  return `${truncated.slice(0, lastSpace)}...`;
+}
 
 function InfoCard({ title, value, subtitle, icon, color }) {
   return (
-    <div className="relative rounded-3xl bg-card p-5 shadow-md overflow-hidden transition-transform duration-300 ease-out hover:scale-105 hover:shadow-xl">
+    <div className="relative rounded-3xl bg-card p-5  overflow-hidden transition duration-300 ease-out hover:scale-105">
       <div
         className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${color}`}
       />
       <div className="flex justify-between items-center gap-3">
         <div className="flex flex-col gap-2">
           <h5 className="text-sm font-normal text-ink-soft">{title}</h5>
-          <h2 className="text-3xl font-bold text-ink">{value}</h2>
+          <h2 className="text-3xl font-bold text-ink">
+            {truncateAfterSpace(value, 20)}
+          </h2>
         </div>
         <div
           className={`flex items-center justify-center size-14 rounded-2xl bg-gradient-to-br ${color} text-on-gold text-2xl shadow-lg transition-transform duration-300 ease-out hover:scale-110 hover:rotate-6`}

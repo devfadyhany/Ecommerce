@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Search,
@@ -89,7 +89,7 @@ const Navbar = () => {
                 }}
                 placeholder="Search..."
                 autoFocus
-                className="hidden sm:block border border-line rounded-full px-4 py-1.5 text-sm outline-none"
+                className="hidden sm:block border border-line rounded-full px-4 py-1.5 bg-surface text-ink text-gold outline-none"
               />
               <button
                 onClick={() => setShowSearch(false)}

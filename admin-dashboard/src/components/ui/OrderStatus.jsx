@@ -32,17 +32,7 @@ const STATUS_META = {
   },
 };
 
-const OrderStatus = React.memo(({ stats }) => {
-  if (!stats) {
-    return (
-      <div className="p-5 rounded-3xl shadow-xl border border-card-line bg-card">
-        <div className="animate-pulse text-ink-faint text-sm">
-          Loading order stats...
-        </div>
-      </div>
-    );
-  }
-
+const OrderStatus = React.memo(({ stats = {} }) => {
   return (
     <>
       <div className="p-5 rounded-3xl shadow-xl border border-card-line bg-card">

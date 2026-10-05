@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 /* ///// animation for order cards appearance ////////  */
 @theme {
   --animate-fadeIn: fadeIn 0.5s ease-in-out;
@@ -18,8 +17,6 @@
   }
 }
 
-
-
 /* ///////////////////////////// Global Styles ////////////////////////////// */
 :root {
   --sef-text-primary: #2a2418;
@@ -35,6 +32,7 @@
   --sef-card-border: #e2e8f0;
   --sef-card-shadow: 0 4px 16px rgba(191, 149, 63, 0.08);
   --sef-card-hover-shadow: 0 8px 24px rgba(191, 149, 63, 0.14);
+  --sef-card-login-shadow: 0 4px 16px rgba(191, 149, 63, 0.08);
 
   --sef-layout-bg: #ffffff;
   --sef-sidebar-bg: #fbf6ec;
@@ -72,8 +70,8 @@
   --toastify-toast-min-height: 44px;
   --toastify-toast-width: fit-content !important;
 
-  --sef-danger-bg:#fef2f2;
-  --sef-danger-text:#ef4444;
+  --sef-danger-bg: #fef2f2;
+  --sef-danger-text: #ef4444;
 }
 
 .dark {
@@ -88,8 +86,9 @@
 
   --sef-card-bg: #1e1a16;
   --sef-card-border: #3a3020;
-  --sef-card-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
-  --sef-card-hover-shadow: 0 8px 28px rgba(212, 175, 55, 0.25);
+  --sef-card-shadow: 0 4px 0px rgba(212, 175, 55, 0);
+  --sef-card-hover-shadow: 0 4px 8px rgba(212, 175, 55, 0.25);
+  --sef-card-login-shadow: 0 4px 16px rgba(212, 175, 55, 0.08);
 
   --sef-layout-bg: #17140f;
   --sef-sidebar-bg: #1a1611;
@@ -117,8 +116,8 @@
   --sef-gradient-card-hover: linear-gradient(180deg, #1e1a16 0%, #262119 100%);
   --sef-gradient-sidebar: linear-gradient(180deg, #17140f 0%, #1a1611 100%);
 
-  --sef-danger-bg:#3a1f1f;
-  --sef-danger-text:#f87171;
+  --sef-danger-bg: #3a1f1f;
+  --sef-danger-text: #f87171;
 }
 
 @theme {
@@ -165,6 +164,16 @@ body {
 
 button {
   cursor: pointer;
+}
+
+.bg-card {
+  background-color: var(--sef-card-bg);
+  border: 1px solid var(--sef-card-border);
+  box-shadow: var(--sef-card-shadow);
+}
+
+.bg-card:hover {
+  box-shadow: var(--sef-card-hover-shadow);
 }
 
 @keyframes toast-drop-in {
@@ -216,14 +225,15 @@ input::-webkit-credentials-auto-fill-button {
   background:
     linear-gradient(var(--color-card), var(--color-card)) padding-box,
     linear-gradient(
-      135deg,
-      var(--color-gold-deep),
-      var(--color-gold),
-      var(--color-gold-light),
-      var(--color-gold),
-      var(--color-gold-deep)
-    ) border-box;
-  
+        135deg,
+        var(--color-gold-deep),
+        var(--color-gold),
+        var(--color-gold-light),
+        var(--color-gold),
+        var(--color-gold-deep)
+      )
+      border-box;
+
   border: 2px solid transparent;
   border-radius: 16px;
 

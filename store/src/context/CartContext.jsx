@@ -14,7 +14,7 @@ export function CartProvider({ children }) {
 
       const res = await api.get("/carts");
       if (res.data.success) {
-        setCart(res.data);
+        setCart(res.data.cart);
       }
     } catch (err) {
       console.error(err);
